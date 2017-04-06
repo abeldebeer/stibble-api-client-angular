@@ -1,15 +1,16 @@
 import { Injectable } from "@angular/core";
 
+import { DEFAULT_LOCAL_STORAGE_TOKEN_KEY } from "../client/client-constants";
+import { AbstractTokenStorage } from "./abstract-token-storage";
 import { Token } from "./token";
-import { TokenStorage } from "./token-storage";
 
 /**
  * Implementation of `TokenStorage` using browser `localStorage`.
  */
 @Injectable()
-export class LocalStorageTokenStorage implements TokenStorage {
+export class LocalStorageTokenStorage extends AbstractTokenStorage {
 
-  private _localStorageKey: string = 'stibble_api_client_angular_token';
+  private _localStorageKey: string = DEFAULT_LOCAL_STORAGE_TOKEN_KEY;
 
   public getToken(): Token {
     const encodedToken: string = localStorage.getItem(this.localStorageKey);
@@ -17,16 +18,16 @@ export class LocalStorageTokenStorage implements TokenStorage {
     return encodedToken ? new Token(encodedToken) : null;
   }
 
-  public hasToken(): boolean {
-    return !!this.getToken();
-  }
-
   public removeToken(): void {
     localStorage.removeItem(this.localStorageKey);
+
+    super.removeToken();
   }
 
   public storeToken(token: Token): void {
     localStorage.setItem(this.localStorageKey, token.encodedToken);
+
+    super.storeToken(token);
   }
 
   public get localStorageKey(): string {
