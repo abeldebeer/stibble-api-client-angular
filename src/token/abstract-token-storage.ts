@@ -16,16 +16,16 @@ export abstract class AbstractTokenStorage implements TokenStorage {
     return !!token && token.isValid();
   }
 
-  public observe(): Observable<boolean> {
+  public observeTokenAvailable(): Observable<boolean> {
     return this._hasValidTokenPublisher;
   }
 
   public removeToken(): void {
-    this._hasValidTokenPublisher.next(false);
+    this._hasValidTokenPublisher.next(this.hasValidToken());
   }
 
   public storeToken(token: Token): void {
-    this._hasValidTokenPublisher.next(true);
+    this._hasValidTokenPublisher.next(this.hasValidToken());
   }
 
 }

@@ -1,13 +1,22 @@
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs/Observable";
+
 import { Token } from "./token";
+import { TokenGateway } from "./token-gateway.service";
 import { TokenStorage } from "./token-storage";
 import { TokenStorageProvider } from "./token-storage-provider.service";
-import { Observable } from "rxjs";
 
 @Injectable()
 export class TokenService {
 
-  constructor(private _tokenStorageProvider: TokenStorageProvider) { }
+  constructor(
+    private _tokenGateway: TokenGateway,
+    private _tokenStorageProvider: TokenStorageProvider
+  ) { }
+
+  public authenticate(email: string, password: string): Observable<Token> {
+    return this._tokenGateway.authenticate(email, password);
+  }
 
   /**
    * TODO: remove method unless required

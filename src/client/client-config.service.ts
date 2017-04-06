@@ -24,8 +24,12 @@ export class ClientConfig {
     this._tokenStorageProvider.tokenStorage = tokenStorage;
   }
 
-  public setBaseUrl(baseUrl: string) {
+  public set baseUrl(baseUrl: string) {
     this._baseUrl = baseUrl;
+  }
+
+  public get baseUrl(): string {
+    return this._baseUrl;
   }
 
 }
