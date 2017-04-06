@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
 
 import { Token } from "./token";
 import { TokenGateway } from "./token-gateway.service";
@@ -14,15 +16,18 @@ export class TokenService {
     private _tokenStorageProvider: TokenStorageProvider
   ) { }
 
-  public authenticate(email: string, password: string): Observable<Token> {
-    return this._tokenGateway.authenticate(email, password);
-  }
-
   /**
-   * TODO: remove method unless required
+   * Create and store an authentication token.
+   *
+   * @param email API username.
+   * @param password API password.
    */
-  public hasValidToken(): boolean {
-    return this.tokenStorage.hasValidToken();
+  public authenticate(email: string, password: string): Observable<Token> {
+    return this._tokenGateway.authenticate(email, password)
+      // extra token from JSON response
+      .map(response => new Token(response.json().token))
+      // store token
+      .do(token => this.tokenStorage.storeToken(token));
   }
 
   private get tokenStorage(): TokenStorage {
