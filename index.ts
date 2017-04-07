@@ -4,8 +4,6 @@ import { HttpModule } from "@angular/http";
 
 // import services
 import { ClientConfig } from "./src/client/client-config.service";
-import { InMemoryTokenStorage } from "./src/token/in-memory-token-storage.service";
-import { LocalStorageTokenStorage } from "./src/token/local-storage-token-storage.service";
 import { TokenGateway } from "./src/token/token-gateway.service";
 import { TokenStorageProvider } from "./src/token/token-storage-provider.service";
 import { TokenService } from "./src/token/token-service.service";
@@ -14,8 +12,8 @@ import { TokenService } from "./src/token/token-service.service";
 export * from "./src/client/client-constants";
 export * from "./src/client/client-config.service";
 export * from "./src/token/abstract-token-storage";
-export * from "./src/token/in-memory-token-storage.service";
-export * from "./src/token/local-storage-token-storage.service";
+export * from "./src/token/in-memory-token-storage";
+export * from "./src/token/local-storage-token-storage";
 export * from "./src/token/token-gateway.service";
 export * from "./src/token/token-payload";
 export * from "./src/token/token-service.service";
@@ -35,8 +33,6 @@ export class StibbleApiClientModule {
       ngModule: StibbleApiClientModule,
       providers: [
         ClientConfig,
-        InMemoryTokenStorage,
-        LocalStorageTokenStorage,
         TokenGateway,
         TokenService,
         TokenStorageProvider

@@ -1,5 +1,3 @@
-import { Injectable } from "@angular/core";
-
 import { DEFAULT_LOCAL_STORAGE_TOKEN_KEY } from "../client/client-constants";
 import { AbstractTokenStorage } from "./abstract-token-storage";
 import { Token } from "./token";
@@ -7,7 +5,6 @@ import { Token } from "./token";
 /**
  * Implementation of `TokenStorage` using browser `localStorage`.
  */
-@Injectable()
 export class LocalStorageTokenStorage extends AbstractTokenStorage {
 
   private _localStorageKey: string = DEFAULT_LOCAL_STORAGE_TOKEN_KEY;

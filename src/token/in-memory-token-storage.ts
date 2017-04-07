@@ -1,12 +1,9 @@
-import { Injectable } from "@angular/core";
-
 import { AbstractTokenStorage } from "./abstract-token-storage";
 import { Token } from "./token";
 
 /**
  * Implementation of `TokenStorage` using where the token is stored in memory.
  */
-@Injectable()
 export class InMemoryTokenStorage extends AbstractTokenStorage {
 
   private _token: Token = null;
