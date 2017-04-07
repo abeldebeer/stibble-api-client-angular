@@ -13,7 +13,16 @@ export abstract class AbstractTokenStorage implements TokenStorage {
   public hasValidToken(): boolean {
     const token: Token = this.getToken();
 
-    return !!token && token.isValid();
+    if (token) {
+      if (token.isValid()) {
+        return true;
+      }
+
+      // stored token is invalid (expired) - remove it
+      this.removeToken();
+    }
+
+    return false;
   }
 
   public observeTokenAvailable(): Observable<boolean> {
