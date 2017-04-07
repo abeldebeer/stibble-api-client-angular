@@ -76,6 +76,15 @@ To lint all `*.ts` files:
 $ npm run lint
 ```
 
+## Publishing the library
+
+To publish the library, run:
+
+```bash
+$ npm run build
+$ npm publish dist
+```
+
 ## License
 
 MIT © [Cooking Fox](mailto:dev@cookingfox.nl)
