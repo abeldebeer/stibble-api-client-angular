@@ -8,7 +8,7 @@ import {
   ClientConfig,
   LocalStorageTokenStorage,
   StibbleApiClientModule
-} from '../../../src';
+} from '../lib';
 
 @NgModule({
   declarations: [

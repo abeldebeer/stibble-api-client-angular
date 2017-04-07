@@ -62,26 +62,12 @@ runs in a web browser, it is recommened to use the `LocalStorageTokenStorage`. A
 is to use the provided `InMemoryTokenStorage` implementation, which just stores the token in a
 variable.
 
-## Development
-
-To generate all `*.js`, `*.js.map` and `*.d.ts` files:
-
-```bash
-$ npm run tsc
-```
-
-To lint all `*.ts` files:
-
-```bash
-$ npm run lint
-```
-
 ## Publishing the library
 
 To publish the library, run:
 
 ```bash
-$ npm run build
+$ npm run build-lib
 $ npm publish dist
 ```
 

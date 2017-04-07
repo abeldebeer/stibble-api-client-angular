@@ -5,8 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4201",
-    "ng-build": "ng build",
-    "build": "ngm build -p src --clean",
+    "build": "ng build",
+    "build-lib": "ngm build -p src/lib --clean",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

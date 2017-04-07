@@ -5,8 +5,8 @@
   },
   "apps": [
     {
-      "root": "demo/src",
-      "outDir": "demo/dist",
+      "root": "src",
+      "outDir": "dist",
       "assets": [
         "assets",
         "favicon.ico"
@@ -17,7 +17,7 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
-      "prefix": "",
+      "prefix": "app",
       "styles": [
         "styles.css"
       ],
@@ -36,10 +36,10 @@
   },
   "lint": [
     {
-      "project": "demo/src/tsconfig.app.json"
+      "project": "src/tsconfig.app.json"
     },
     {
-      "project": "demo/src/tsconfig.spec.json"
+      "project": "src/tsconfig.spec.json"
     },
     {
       "project": "e2e/tsconfig.e2e.json"
