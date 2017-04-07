@@ -2,6 +2,8 @@
 
 This is a client for the Stibble REST API, for Angular 2 and up.
 
+___NOTE: this is an early, in-development version!___
+
 ## Installation
 
 To install this library into your Angular project, run:
