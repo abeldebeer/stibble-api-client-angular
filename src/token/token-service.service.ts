@@ -30,6 +30,20 @@ export class TokenService {
       .do(token => this.tokenStorage.storeToken(token));
   }
 
+  /**
+   * Return whether a stored token is available and hasn't expired yet.
+   */
+  hasValidToken(): boolean {
+    return this.tokenStorage.hasValidToken();
+  };
+
+  /**
+   * Remove a stored token.
+   */
+  removeToken(): void {
+    this.tokenStorage.removeToken();
+  }
+
   private get tokenStorage(): TokenStorage {
     return this._tokenStorageProvider.tokenStorage;
   }
