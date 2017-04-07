@@ -16,6 +16,12 @@ export class ClientConfig {
   }
 
   public set baseUrl(baseUrl: string) {
+    const lastSlash: number = baseUrl.lastIndexOf('/');
+
+    if (lastSlash === baseUrl.length - 1) {
+      baseUrl = baseUrl.substring(0, lastSlash);
+    }
+
     this._baseUrl = baseUrl;
   }
 
