@@ -1,5 +1,5 @@
 {
-  "name": "stibble-api-client-angular",
+  "name": "cookingfox/stibble-api-client-angular",
   "version": "0.1.0",
   "scripts": {
     "build": "ngc -p tsconfig.json",
