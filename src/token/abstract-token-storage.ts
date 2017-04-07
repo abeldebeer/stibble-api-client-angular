@@ -8,10 +8,6 @@ export abstract class AbstractTokenStorage implements TokenStorage {
 
   private _hasValidTokenPublisher: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor() {
-    this._publishHasValidToken();
-  }
-
   public abstract getToken(): Token;
 
   public hasValidToken(): boolean {
@@ -38,6 +34,10 @@ export abstract class AbstractTokenStorage implements TokenStorage {
   }
 
   public storeToken(token: Token): void {
+    this._publishHasValidToken();
+  }
+
+  protected _initialize() {
     this._publishHasValidToken();
   }
 

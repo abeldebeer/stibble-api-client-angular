@@ -8,6 +8,12 @@ export class InMemoryTokenStorage extends AbstractTokenStorage {
 
   private _token: Token = null;
 
+  constructor() {
+    super();
+
+    this._initialize();
+  }
+
   public getToken(): Token {
     return this._token;
   }

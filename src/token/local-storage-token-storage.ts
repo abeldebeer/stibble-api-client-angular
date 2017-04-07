@@ -7,7 +7,14 @@ import { Token } from "./token";
  */
 export class LocalStorageTokenStorage extends AbstractTokenStorage {
 
-  private _localStorageKey: string = DEFAULT_LOCAL_STORAGE_TOKEN_KEY;
+  private _localStorageKey: string;
+
+  constructor() {
+    super();
+
+    this._localStorageKey = DEFAULT_LOCAL_STORAGE_TOKEN_KEY;
+    this._initialize();
+  }
 
   public getToken(): Token {
     const encodedToken: string = localStorage.getItem(this.localStorageKey);
