@@ -1,31 +1,32 @@
-# stibble-api-client-angular
+# Stibble API client for Angular
+
+This is a client for the Stibble REST API, for Angular 2 and up.
 
 ## Installation
 
-To install this library, run:
+To install this library into your Angular project, run:
 
 ```bash
 $ npm install stibble-api-client-angular --save
 ```
 
-## Consuming your library
+## Add library to Angular project
 
-Once you have published your library to npm, you can import your library in any Angular application by running:
-
-```bash
-$ npm install stibble-api-client-angular
-```
-
-and then from your Angular `AppModule`:
+To add the library to an Angular project, first import it in your module, e.g. the default
+`AppModule`, and then configure it:
 
 ```typescript
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
 
-import { AppComponent } from './app.component';
+import { AppComponent } from "./app.component";
 
-// Import your library
-import { SampleModule } from 'stibble-api-client-angular';
+// import library module and configuration requirements
+import {
+  StibbleApiClientModule,
+  ClientConfig,
+  LocalStorageTokenStorage
+} from "stibble-api-client-angular";
 
 @NgModule({
   declarations: [
@@ -34,24 +35,30 @@ import { SampleModule } from 'stibble-api-client-angular';
   imports: [
     BrowserModule,
 
-    // Specify your library as an import
-    LibraryModule
+    // import into module, with providers (`forRoot()` is required!)
+    StibbleApiClientModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  // use dependency injection to request config service
+  constructor(clientConfig:ClientConfig) {
+    // required: set token storage, for example a `localStorage` implementation:
+    clientConfig.tokenStorage = new LocalStorageTokenStorage();
+
+    // optional: set base URL, including http(s)://
+    clientConfig.baseUrl = 'https://api.stibble.com';
+  }
+
+}
 ```
 
-Once your library is imported, you can use its components, directives and pipes in your Angular application:
-
-```xml
-<!-- You can now use your library component in app.component.html -->
-<h1>
-  {{title}}
-</h1>
-<sampleComponent></sampleComponent>
-```
+As the example shows, it is required to provide a `TokenStorage` implementation. If your project
+runs in a web browser, it is recommened to use the `LocalStorageTokenStorage`. Another possibility
+is to use the provided `InMemoryTokenStorage` implementation, which just stores the token in a
+variable.
 
 ## Development
 
