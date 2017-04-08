@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import { DEFAULT_BASE_URL } from "./client-constants";
-import { TokenStorage } from "../token/token-storage";
-import { TokenStorageProvider } from "../token/token-storage-provider.service";
+import { DEFAULT_BASE_URL } from './client-constants';
+import { TokenStorage } from '../token/token-storage';
+import { TokenStorageProvider } from '../token/token-storage-provider.service';
 
 @Injectable()
 export class ClientConfig {

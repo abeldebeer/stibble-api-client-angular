@@ -1,5 +1,5 @@
-import { AbstractTokenStorage } from "./abstract-token-storage";
-import { Token } from "./token";
+import { AbstractTokenStorage } from './abstract-token-storage';
+import { Token } from './token';
 
 /**
  * Implementation of `TokenStorage` using where the token is stored in memory.

@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptionsArgs, Response } from '@angular/http';
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 
-import { ClientConfig } from "../client/client-config.service";
-import { PATH_TOKEN } from "../client/client-constants";
-import { Token } from "./token";
+import { ClientConfig } from '../client/client-config.service';
+import { PATH_TOKEN } from '../client/client-constants';
+import { Token } from './token';
 
 @Injectable()
 export class TokenGateway {

@@ -1,6 +1,6 @@
-import { DEFAULT_LOCAL_STORAGE_TOKEN_KEY } from "../client/client-constants";
-import { AbstractTokenStorage } from "./abstract-token-storage";
-import { Token } from "./token";
+import { DEFAULT_LOCAL_STORAGE_TOKEN_KEY } from '../client/client-constants';
+import { AbstractTokenStorage } from './abstract-token-storage';
+import { Token } from './token';
 
 /**
  * Implementation of `TokenStorage` using browser `localStorage`.

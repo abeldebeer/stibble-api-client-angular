@@ -52,6 +52,18 @@
   },
   "defaults": {
     "styleExt": "css",
-    "component": {}
+    "serve": {
+      "host": "0.0.0.0",
+      "port": 4201
+    },
+    "class": {
+      "spec": true
+    },
+    "module": {
+      "spec": true
+    },
+    "service": {
+      "spec": true
+    }
   }
 }

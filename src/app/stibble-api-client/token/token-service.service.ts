@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs/Observable";
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 
-import { Token } from "./token";
-import { TokenGateway } from "./token-gateway.service";
-import { TokenStorage } from "./token-storage";
-import { TokenStorageProvider } from "./token-storage-provider.service";
+import { Token } from './token';
+import { TokenGateway } from './token-gateway.service';
+import { TokenStorage } from './token-storage';
+import { TokenStorageProvider } from './token-storage-provider.service';
 
 @Injectable()
 export class TokenService {

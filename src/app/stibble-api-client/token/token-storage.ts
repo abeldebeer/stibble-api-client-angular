@@ -1,6 +1,6 @@
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 
-import { Token } from "./token";
+import { Token } from './token';
 
 export interface TokenStorage {
 

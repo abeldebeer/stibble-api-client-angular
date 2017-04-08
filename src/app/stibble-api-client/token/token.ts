@@ -1,4 +1,4 @@
-import { TokenPayload } from "./token-payload";
+import { TokenPayload } from './token-payload';
 
 export class Token {
 

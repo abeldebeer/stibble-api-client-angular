@@ -1,8 +1,8 @@
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
-import { Token } from "./token";
-import { TokenStorage } from "./token-storage";
+import { Token } from './token';
+import { TokenStorage } from './token-storage';
 
 export abstract class AbstractTokenStorage implements TokenStorage {
 
