@@ -1,11 +1,17 @@
 import { TokenPayload } from './token-payload';
 
+const REGEX_ENCODED_TOKEN: RegExp = /^[\w-]+\.[\w-]+\.[\w-]+$/;
+
 export class Token {
 
   private _decodedPayload: TokenPayload;
   private readonly _storedAt: number = new Date().getTime();
 
-  constructor(private _encodedToken: string) { }
+  constructor(private _encodedToken: string) {
+    if (!this._encodedToken || !this._encodedToken.match(REGEX_ENCODED_TOKEN)) {
+      throw new Error('Provided value must be a valid JWT encoded token');
+    }
+  }
 
   public isValid(): boolean {
     // server: expire time minus issued time, converted to milliseconds
