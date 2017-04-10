@@ -6,17 +6,17 @@ import { Repository } from './entity/repository';
 import { USERS, APPS, PROJECTS } from './client/client-di';
 import { RepositoryProvider } from './entity/repository-provider.service';
 import { CommonModule } from '@angular/common';
-import { NgModule, ModuleWithProviders, OpaqueToken } from '@angular/core';
+import { NgModule, ModuleWithProviders, OpaqueToken, InjectionToken } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { TokenService } from './token/token-service.service';
 import { TokenStorageProvider } from './token/token-storage-provider.service';
 import { TokenGateway } from './token/token-gateway.service';
 import { ClientConfig } from './client/client-config.service';
 
-const entityOpaqueTokenMap = new Map<OpaqueToken, { new (): Entity; }>();
-entityOpaqueTokenMap.set(APPS, App);
-entityOpaqueTokenMap.set(PROJECTS, Project);
-entityOpaqueTokenMap.set(USERS, User);
+const entityInjectionTokenMap = new Map<InjectionToken<any>, { new (): Entity; }>();
+entityInjectionTokenMap.set(APPS, App);
+entityInjectionTokenMap.set(PROJECTS, Project);
+entityInjectionTokenMap.set(USERS, User);
 
 const repositoryFactories: any[] = [];
 
@@ -26,10 +26,10 @@ function repositoryFactory<T extends Entity>(type: { new (): T; }) {
   };
 };
 
-entityOpaqueTokenMap.forEach((value, key) => {
+entityInjectionTokenMap.forEach((entity, injectionToken) => {
   repositoryFactories.push({
-    provide: key,
-    useFactory: repositoryFactory(value),
+    provide: injectionToken,
+    useFactory: repositoryFactory(entity),
     deps: [RepositoryProvider]
   });
 });
