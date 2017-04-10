@@ -59,4 +59,20 @@ describe('Token', () => {
     expect(() => new Token(EXAMPLE_ENCODED_TOKEN)).not.toThrow();
   });
 
+  it('should be valid when expected', () => {
+    const token = new Token(mockEncodedToken(new Date()));
+
+    expect(token.isValid()).toEqual(true);
+  });
+
+  it('should not be valid when expired', () => {
+    // create expired date for mock token
+    const expired = new Date();
+    expired.setMilliseconds(expired.getMilliseconds() - EXAMPLE_EXPIRATION_MILLISECONDS - 1000);
+
+    const token = new Token(mockEncodedToken(expired));
+
+    expect(token.isValid()).toEqual(false);
+  });
+
 });
