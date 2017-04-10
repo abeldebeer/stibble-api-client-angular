@@ -1,7 +1,11 @@
+import { Repository } from './entity/repository';
 export * from './stibble-api-client.module';
 
 export * from './client/client-config.service';
 export * from './client/client-constants';
+export * from './client/client-di';
+
+export * from './entity/repository';
 
 export * from './token/abstract-token-storage';
 export * from './token/in-memory-token-storage';
