@@ -1,9 +1,6 @@
-import { Project } from './entity/project';
-import { App } from './entity/app';
-import { User } from './entity/user';
+import { EntityMetadataService } from './entity/entity-metadata-service.service';
 import { Entity } from './entity/entity';
 import { Repository } from './entity/repository';
-import { USERS, APPS, PROJECTS } from './client/client-di';
 import { RepositoryProvider } from './entity/repository-provider.service';
 import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders, OpaqueToken, InjectionToken } from '@angular/core';
@@ -12,19 +9,19 @@ import { TokenService } from './token/token-service.service';
 import { TokenStorageProvider } from './token/token-storage-provider.service';
 import { TokenGateway } from './token/token-gateway.service';
 import { ClientConfig } from './client/client-config.service';
+import { entityInjectionTokenMap } from './client/client-di';
 
-const entityInjectionTokenMap = new Map<InjectionToken<any>, { new (): Entity; }>();
-entityInjectionTokenMap.set(APPS, App);
-entityInjectionTokenMap.set(PROJECTS, Project);
-entityInjectionTokenMap.set(USERS, User);
+// -------------------------------------------------------------------------------------------------
+// GENERATE ENTITY REPOSITORY FACTORIES
+// -------------------------------------------------------------------------------------------------
 
-const repositoryFactories: any[] = [];
-
-function repositoryFactory<T extends Entity>(type: { new (): T; }) {
-  return (repositoryProvider: RepositoryProvider): Repository<T> => {
+function repositoryFactory(type: { new (): Entity; }): Function {
+  return (repositoryProvider: RepositoryProvider): Repository<Entity> => {
     return repositoryProvider.getRepository(type);
   };
 };
+
+const repositoryFactories: any[] = [];
 
 entityInjectionTokenMap.forEach((entity, injectionToken) => {
   repositoryFactories.push({
@@ -33,6 +30,10 @@ entityInjectionTokenMap.forEach((entity, injectionToken) => {
     deps: [RepositoryProvider]
   });
 });
+
+// -------------------------------------------------------------------------------------------------
+// MODULE DEFINITION
+// -------------------------------------------------------------------------------------------------
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ export class StibbleApiClientModule {
       ngModule: StibbleApiClientModule,
       providers: [
         ClientConfig,
+        EntityMetadataService,
         TokenGateway,
         TokenService,
         TokenStorageProvider,

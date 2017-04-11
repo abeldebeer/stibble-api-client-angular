@@ -1,7 +1,7 @@
-import { EntityMeta } from './entity-meta';
 import { Entity } from './entity';
+import { EntityClass } from './entity-class.decorator';
 
-@EntityMeta({ endpoint: 'users' })
+@EntityClass({ endpoint: 'users' })
 export class User implements Entity {
 
   readonly id: number;

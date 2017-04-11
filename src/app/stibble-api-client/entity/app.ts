@@ -1,8 +1,8 @@
 import { OwnedEntity } from './owned-entity';
-import { EntityMeta } from './entity-meta';
 import { Entity } from './entity';
+import { EntityClass } from './entity-class.decorator';
 
-@EntityMeta({ endpoint: 'apps' })
+@EntityClass({ endpoint: 'apps' })
 export class App implements OwnedEntity {
 
   readonly id: number;
