@@ -1,16 +1,16 @@
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Entity } from './entity';
 
-export interface Repository<T extends Entity> {
+export interface Gateway {
 
   /**
    * Find one entity by its unique resource ID.
    */
-  find(id: string): Observable<T>;
+  find(id: string): Observable<Response>;
 
   /**
    * Find all entities.
    */
-  findAll(): Observable<T[]>;
+  findAll(): Observable<Response>;
 
 }

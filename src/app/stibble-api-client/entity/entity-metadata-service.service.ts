@@ -18,13 +18,9 @@ export class EntityMetadataService {
     EntityMetadataService._classMetadata.set(target, metadata);
   }
 
-
   public static addFieldMetadata(target: Function, propertyKey: string, metadata: EntityFieldMetadata): void {
-    let map: Map<string, EntityFieldMetadata> = EntityMetadataService._fieldMetadata.get(target);
-
-    if (!map) {
-      map = new Map();
-    }
+    const map: Map<string, EntityFieldMetadata> =
+      EntityMetadataService._fieldMetadata.get(target) || new Map();
 
     map.set(propertyKey, metadata);
 
