@@ -9,7 +9,7 @@ import { TokenService } from './token/token-service.service';
 import { TokenStorageProvider } from './token/token-storage-provider.service';
 import { TokenGateway } from './token/token-gateway.service';
 import { ClientConfig } from './client/client-config.service';
-import { getRepositoryInjectionTokens } from './client/client-di';
+import { getRepositoryInjectionTokens } from './client/client-injection';
 
 // -------------------------------------------------------------------------------------------------
 // GENERATE ENTITY REPOSITORY FACTORIES

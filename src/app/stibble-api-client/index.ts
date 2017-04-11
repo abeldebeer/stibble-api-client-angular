@@ -3,7 +3,7 @@ export * from './stibble-api-client.module';
 
 export * from './client/client-config.service';
 export * from './client/client-constants';
-export * from './client/client-di';
+export * from './client/client-injection';
 
 export * from './entity/repository';
 
