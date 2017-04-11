@@ -1,6 +1,6 @@
 import { STIBBLE_USER, STIBBLE_APP } from './stibble-api-client/client/client-di';
-import { App } from './stibble-api-client/entity/app';
-import { User } from './stibble-api-client/entity/user';
+import { App } from './stibble-api-client/stibble/app';
+import { User } from './stibble-api-client/stibble/user';
 import { RepositoryProvider } from './stibble-api-client/entity/repository-provider.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Inject } from '@angular/core';

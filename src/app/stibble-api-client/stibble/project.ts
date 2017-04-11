@@ -1,6 +1,5 @@
-import { OwnedEntity } from './owned-entity';
-import { EntityClass } from './entity-class.decorator';
-import { EntityField } from './entity-field.decorator';
+import { OwnedEntity } from '../entity/owned-entity';
+import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { convertEntityId } from '../util/functions';
 
 @EntityClass({ endpoint: 'projects' })

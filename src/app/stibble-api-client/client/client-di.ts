@@ -1,7 +1,7 @@
 import { Entity } from './../entity/entity';
-import { User } from './../entity/user';
-import { Project } from './../entity/project';
-import { App } from './../entity/app';
+import { User } from './../stibble/user';
+import { Project } from './../stibble/project';
+import { App } from './../stibble/app';
 import { Repository } from './../entity/repository';
 import { InjectionToken } from '@angular/core';
 
