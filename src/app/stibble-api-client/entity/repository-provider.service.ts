@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
 interface Gateway {
-  find(id: number): Observable<Response>;
+  find(id: string): Observable<Response>;
   findAll(): Observable<Response>;
 }
 
@@ -24,7 +24,7 @@ class EntityGateway implements Gateway {
     private _http: Http,
   ) { }
 
-  find(id: number): Observable<Response> {
+  find(id: string): Observable<Response> {
     const url: string = this._clientConfig.baseUrl + PATH_API + this._metadata.endpoint + '/' + id;
     const authHeader: string = 'Bearer ' + this._tokenStorageProvider.getToken();
     const options: RequestOptionsArgs = {
@@ -64,7 +64,7 @@ class EntityRepository<T extends Entity> implements Repository<T> {
     private _gateway: EntityGateway
   ) { }
 
-  find(id: number): Observable<T> {
+  find(id: string): Observable<T> {
     return this._gateway.find(id)
       .map(response => {
         const entity: T = new this._type;

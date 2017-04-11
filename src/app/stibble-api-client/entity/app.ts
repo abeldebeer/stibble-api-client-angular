@@ -7,7 +7,7 @@ import { EntityClass } from './entity-class.decorator';
 export class App implements OwnedEntity {
 
   @EntityField()
-  id: number;
+  id: string;
 
   @EntityField({ type: Date })
   createdAt: Date;

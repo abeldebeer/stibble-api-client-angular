@@ -6,7 +6,7 @@ import { EntityField } from './entity-field.decorator';
 export class User implements Entity {
 
   @EntityField()
-  id: number;
+  id: string;
 
   @EntityField({ type: Date })
   createdAt: Date;
