@@ -9,7 +9,7 @@ import { TokenService } from './token/token-service.service';
 import { TokenStorageProvider } from './token/token-storage-provider.service';
 import { TokenGateway } from './token/token-gateway.service';
 import { ClientConfig } from './client/client-config.service';
-import { entityInjectionTokenMap } from './client/client-di';
+import { getRepositoryInjectionTokens } from './client/client-di';
 
 // -------------------------------------------------------------------------------------------------
 // GENERATE ENTITY REPOSITORY FACTORIES
@@ -23,7 +23,7 @@ function repositoryFactory(type: { new (): Entity; }): Function {
 
 const repositoryFactories: any[] = [];
 
-entityInjectionTokenMap.forEach((entity, injectionToken) => {
+getRepositoryInjectionTokens().forEach((entity, injectionToken) => {
   repositoryFactories.push({
     provide: injectionToken,
     useFactory: repositoryFactory(entity),
