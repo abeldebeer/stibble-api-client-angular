@@ -1,5 +1,5 @@
 export interface EntityClassMetadata {
 
-  readonly endpoint: string;
+  endpoint: string;
 
 }

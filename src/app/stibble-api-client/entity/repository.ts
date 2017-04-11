@@ -3,7 +3,7 @@ import { Entity } from './entity';
 
 export interface Repository<T extends Entity> {
 
-  find(id: string): Observable<T>;
+  find(id: number): Observable<T>;
   findAll(): Observable<T[]>;
 
 }

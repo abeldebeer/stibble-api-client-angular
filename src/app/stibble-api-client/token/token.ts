@@ -39,4 +39,8 @@ export class Token {
     return this._decodedPayload;
   }
 
+  public toString(): string {
+    return this.encodedToken;
+  }
+
 }

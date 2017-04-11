@@ -1,11 +1,26 @@
 import { Entity } from './entity';
 import { EntityClass } from './entity-class.decorator';
+import { EntityField } from './entity-field.decorator';
 
 @EntityClass({ endpoint: 'users' })
 export class User implements Entity {
 
-  readonly id: number;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
+  @EntityField()
+  id: number;
+
+  @EntityField({ type: Date })
+  createdAt: Date;
+
+  @EntityField({ type: Date })
+  updatedAt: Date;
+
+  @EntityField()
+  email: string;
+
+  @EntityField()
+  firstName: string;
+
+  @EntityField()
+  lastName: string;
 
 }
