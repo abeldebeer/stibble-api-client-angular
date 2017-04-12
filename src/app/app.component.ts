@@ -3,7 +3,6 @@ import { Component, Inject } from '@angular/core';
 import {
   App,
   Repository,
-  STIBBLE_APP,
   TokenService
 } from './stibble-api-client'; // should be 'stibble-api-client-angular' in your project
 
@@ -23,7 +22,7 @@ export class AppComponent {
     private _tokenService: TokenService,
 
     // the entity repositories are as follows:
-    @Inject(STIBBLE_APP) private _appRepository: Repository<App>,
+    @Inject(App) private _appRepository: Repository<App>,
   ) { }
 
   public onFormSubmit(event: Event, email: string, password: string) {
