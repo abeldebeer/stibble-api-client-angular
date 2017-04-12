@@ -18,4 +18,9 @@ export interface Repository<T extends Entity> {
    */
   findByParent(parentId: string): Observable<Array<T>>;
 
+  /**
+   * Find the first entity of the collection.
+   */
+  findFirst(): Observable<T>;
+
 }

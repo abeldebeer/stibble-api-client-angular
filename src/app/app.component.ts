@@ -1,3 +1,4 @@
+import { ProjectLocation } from './stibble-api-client/stibble/project-location';
 import { Component, Inject } from '@angular/core';
 
 import {
@@ -21,7 +22,7 @@ export class AppComponent {
     // the token service can be injected directly
     private _tokenService: TokenService,
 
-    // the entity repositories are as follows:
+    // the entity repositories are injected as follows:
     @Inject(App) private _appRepository: Repository<App>,
   ) { }
 
@@ -35,7 +36,7 @@ export class AppComponent {
   }
 
   private _authenticate(email: string, password: string) {
-    // create an authentication token
+    // create an authentication token, stored in `TokenStorage`
     this._tokenService.authenticate(email, password)
       .subscribe(token => this._getApp(), error => {
         this.error = 'An error occurred: ' + (error.statusText || error.status);
@@ -44,10 +45,10 @@ export class AppComponent {
   }
 
   private _getApp() {
-    // request the user's apps
-    this._appRepository.findAll()
-      // get the default app (first)
-      .subscribe(apps => this.userApp = apps[0], console.error);
+    // request the user's app
+    this._appRepository.findFirst()
+      // set user app property
+      .subscribe((app: App) => this.userApp = app, console.error);
   }
 
 }

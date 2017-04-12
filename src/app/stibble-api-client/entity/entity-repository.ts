@@ -52,6 +52,11 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
       .map(response => this._createEntities(response.json()));
   }
 
+  findFirst(): Observable<T> {
+    return this.findAll()
+      .map(entities => entities[0]);
+  }
+
   // -----------------------------------------------------------------------------------------------
   // PRIVATE METHODS
   // -----------------------------------------------------------------------------------------------
