@@ -19,7 +19,7 @@ export class TokenGateway {
    */
   public authenticate(username: string, password: string): Observable<Response> {
     const url: string = this._clientConfig.baseUrl + PATH_TOKEN;
-    const authHeader = 'Basic ' + btoa(username + ':' + password);
+    const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
     const options: RequestOptionsArgs = {
       headers: new Headers({
         'Authorization': authHeader,

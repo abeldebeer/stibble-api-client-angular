@@ -4,7 +4,12 @@
 export interface Entity {
 
   /**
-   * Unique resource identifier.
+   * International resource identifier, e.g. `/api/entities/id`.
+   */
+  iri: string;
+
+  /**
+   * Just the unique identifier part of the `iri`, instead of the full path.
    */
   id: string;
 

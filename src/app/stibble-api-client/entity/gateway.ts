@@ -1,7 +1,13 @@
+import { Entity } from './entity';
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 export interface Gateway {
+
+  /**
+   * Create the provided entity.
+   */
+  create(entity: Entity): Observable<Response>;
 
   /**
    * Find one entity by its unique resource ID.

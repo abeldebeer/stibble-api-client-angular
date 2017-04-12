@@ -4,6 +4,11 @@ import { Entity } from './entity';
 export interface Repository<T extends Entity> {
 
   /**
+   * Create the provided entity.
+   */
+  create(entity: T): Observable<T>;
+
+  /**
    * Find one entity by its unique resource ID.
    */
   find(id: string): Observable<T>;

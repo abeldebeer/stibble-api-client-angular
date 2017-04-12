@@ -6,6 +6,9 @@ import { convertEntityId } from '../util/functions';
 @EntityClass({ endpoint: 'project-locations' })
 export class ProjectLocation implements OwnedEntity {
 
+  @EntityField({ flags: [Flag.IMMUTABLE] })
+  iri: string;
+
   @EntityField({ convert: convertEntityId, flags: [Flag.IMMUTABLE] })
   id: string;
 

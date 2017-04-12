@@ -3,8 +3,13 @@ import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
 import { convertEntityId } from '../util/functions';
 
+export type MapType = 'GOOGLE_OUTDOOR' | 'IMAGE';
+
 @EntityClass({ endpoint: 'projects' })
 export class Project implements OwnedEntity {
+
+  @EntityField({ flags: [Flag.IMMUTABLE] })
+  iri: string;
 
   @EntityField({ convert: convertEntityId, flags: [Flag.IMMUTABLE] })
   id: string;
@@ -28,7 +33,7 @@ export class Project implements OwnedEntity {
   title: string;
 
   @EntityField({ flags: [Flag.REQUIRED] })
-  mapType: string;
+  mapType: MapType;
 
   @EntityField()
   subTitle: string;

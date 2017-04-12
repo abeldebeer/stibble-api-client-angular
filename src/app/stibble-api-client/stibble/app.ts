@@ -6,6 +6,9 @@ import { convertEntityId } from '../util/functions';
 @EntityClass({ endpoint: 'apps' })
 export class App implements OwnedEntity {
 
+  @EntityField({ flags: [Flag.IMMUTABLE] })
+  iri: string;
+
   @EntityField({ convert: convertEntityId, flags: [Flag.IMMUTABLE] })
   id: string;
 
