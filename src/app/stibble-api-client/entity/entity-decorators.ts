@@ -1,6 +1,5 @@
 import { EntityMetadataService } from './entity-metadata-service.service';
-import { EntityClassMetadata } from './entity-class-metadata';
-import { EntityFieldMetadata } from './entity-field-metadata';
+import { EntityClassMetadata, EntityFieldMetadata } from './entity-metadata';
 
 /**
  * Required decorator for entity classes.

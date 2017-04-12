@@ -3,7 +3,7 @@ import { Entity } from './entity/entity';
 import { Repository } from './entity/repository';
 import { RepositoryProvider } from './entity/repository-provider.service';
 import { CommonModule } from '@angular/common';
-import { NgModule, ModuleWithProviders, OpaqueToken, InjectionToken } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { TokenService } from './token/token-service.service';
 import { TokenStorageProvider } from './token/token-storage-provider.service';
@@ -39,23 +39,15 @@ getRepositoryInjectionTokens().forEach((entity, injectionToken) => {
   imports: [
     CommonModule,
     HttpModule
+  ],
+  providers: [
+    ClientConfig,
+    EntityMetadataService,
+    TokenGateway,
+    TokenService,
+    TokenStorageProvider,
+    RepositoryProvider,
+    ...repositoryFactories
   ]
 })
-export class StibbleApiClientModule {
-
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: StibbleApiClientModule,
-      providers: [
-        ClientConfig,
-        EntityMetadataService,
-        TokenGateway,
-        TokenService,
-        TokenStorageProvider,
-        RepositoryProvider,
-        ...repositoryFactories
-      ]
-    };
-  }
-
-}
+export class StibbleApiClientModule { }

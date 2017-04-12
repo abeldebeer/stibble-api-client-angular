@@ -1,4 +1,4 @@
-import { EntityFieldMetadata } from './entity-field-metadata';
+import { EntityFieldMetadata } from './entity-metadata';
 import { Observable } from 'rxjs/Observable';
 import { EntityGateway } from './entity-gateway';
 import { EntityMetadataService } from './entity-metadata-service.service';

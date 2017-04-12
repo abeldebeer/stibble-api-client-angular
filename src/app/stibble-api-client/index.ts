@@ -1,11 +1,23 @@
-import { Repository } from './entity/repository';
 export * from './stibble-api-client.module';
 
 export * from './client/client-config.service';
 export * from './client/client-constants';
 export * from './client/client-injection';
 
+export * from './entity/entity-decorators';
+export * from './entity/entity-gateway';
+export * from './entity/entity-metadata-service.service';
+export * from './entity/entity-metadata';
+export * from './entity/entity-repository';
+export * from './entity/entity';
+export * from './entity/gateway';
+export * from './entity/owned-entity';
+export * from './entity/repository-provider.service';
 export * from './entity/repository';
+
+export * from './stibble/app';
+export * from './stibble/project';
+export * from './stibble/user';
 
 export * from './token/abstract-token-storage';
 export * from './token/in-memory-token-storage';
@@ -16,3 +28,5 @@ export * from './token/token-service.service';
 export * from './token/token-storage-provider.service';
 export * from './token/token-storage';
 export * from './token/token';
+
+export * from './util/functions';

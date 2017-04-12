@@ -1,6 +1,5 @@
-import { EntityFieldMetadata } from './entity-field-metadata';
 import { Repository } from './repository';
-import { EntityClassMetadata } from './entity-class-metadata';
+import { EntityClassMetadata, EntityFieldMetadata } from './entity-metadata';
 import { Injectable } from '@angular/core';
 
 @Injectable()

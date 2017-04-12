@@ -1,3 +1,27 @@
-<h1>
-  {{title}}
-</h1>
+<h1>Stibble API Client: Demo</h1>
+
+<div *ngIf="userApp">
+  <h2>{{userApp.title}}</h2>
+</div>
+
+<div *ngIf="!userApp">
+  <form (submit)="onFormSubmit($event, email.value, password.value)">
+    <div>
+      <label>E-mail</label>
+      <input type="email" #email />
+    </div>
+
+    <div>
+      <label>Password</label>
+      <input type="password" #password />
+    </div>
+
+    <div>
+      <input type="submit" [disabled]="loading" />
+    </div>
+  </form>
+</div>
+
+<p *ngIf="error">
+  <strong>{{error}}</strong>
+</p>

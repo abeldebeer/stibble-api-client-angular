@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Headers, Response, Http, RequestOptionsArgs } from '@angular/http';
 import { TokenStorageProvider } from '../token/token-storage-provider.service';
 import { ClientConfig } from '../client/client-config.service';
-import { EntityClassMetadata } from './entity-class-metadata';
+import { EntityClassMetadata } from './entity-metadata';
 import { Gateway } from './gateway';
 
 const REQUEST_OPTIONS: RequestOptionsArgs = {
