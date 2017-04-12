@@ -2,8 +2,8 @@ import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { convertEntityId } from '../util/functions';
 
-@EntityClass({ endpoint: 'projects' })
-export class Project implements OwnedEntity {
+@EntityClass({ endpoint: 'project-locations' })
+export class ProjectLocation implements OwnedEntity {
 
   @EntityField({ convert: convertEntityId })
   id: string;
@@ -21,21 +21,24 @@ export class Project implements OwnedEntity {
   title: string;
 
   @EntityField()
-  subTitle: string;
+  description: string;
 
   @EntityField()
   imageSrc: string;
 
   @EntityField()
-  introductionText: string;
+  latitude: string;
 
   @EntityField()
-  mapType: string;
+  longitude: string;
+
+  @EntityField()
+  beacon: string;
 
   @EntityField()
   parent: string;
 
   @EntityField()
-  locations: Array<string>;
+  pages: Array<string>;
 
 }

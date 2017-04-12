@@ -1,6 +1,7 @@
+import { KEY_PARENT } from './../client/client-constants';
 import { EntityFieldMetadata } from './entity-metadata';
 import { Observable } from 'rxjs/Observable';
-import { EntityGateway } from './entity-gateway';
+import { Gateway } from './gateway';
 import { EntityMetadataService } from './entity-metadata-service.service';
 import { Repository } from './repository';
 import { Entity } from './entity';
@@ -16,45 +17,72 @@ interface HydraCollectionResult {
 
 export class EntityRepository<T extends Entity> implements Repository<T> {
 
+  // -----------------------------------------------------------------------------------------------
+  // CONSTRUCTOR
+  // -----------------------------------------------------------------------------------------------
+
   constructor(
     private _type: { new (): T; },
     private _metadataService: EntityMetadataService,
-    private _gateway: EntityGateway
+    private _gateway: Gateway
   ) { }
+
+  // -----------------------------------------------------------------------------------------------
+  // PUBLIC METHODS
+  // -----------------------------------------------------------------------------------------------
 
   find(id: string): Observable<T> {
     return this._gateway.find(id)
       .map(response => this._createEntity(response.json()));
   }
 
-  findAll(): Observable<T[]> {
+  findAll(): Observable<Array<T>> {
     return this._gateway.findAll()
-      .map(response => {
-        const json: any = response.json();
+      .map(response => this._createEntities(response.json()));
+  }
 
-        // make the hydra structure explicit
-        const result: HydraCollectionResult = {
-          items: json['hydra:member'],
-          numTotalItems: json['hydra:totalItems']
-        };
+  findByParent(parentId: string): Observable<Array<T>> {
+    const metadata = this._metadataService.getFieldMetadata(this._type, KEY_PARENT);
 
-        return result.items.map(data => this._createEntity(data));
-      });
+    if (!metadata) {
+      console.warn('Entity `' + this._type.name + '` does not have a `' + KEY_PARENT + '` field');
+    }
+
+    return this._gateway.findByParent(parentId)
+      .map(response => this._createEntities(response.json()));
+  }
+
+  // -----------------------------------------------------------------------------------------------
+  // PRIVATE METHODS
+  // -----------------------------------------------------------------------------------------------
+
+  /**
+   * @param json Object containing the entity objects.
+   * @returns Array of created entities.
+   */
+  private _createEntities(json: any): Array<T> {
+    // make the hydra structure explicit
+    const result: HydraCollectionResult = {
+      items: json['hydra:member'],
+      numTotalItems: json['hydra:totalItems']
+    };
+
+    return result.items.map(data => this._createEntity(data));
   }
 
   /**
-   * @param data Object containing the entity properties.
+   * @param json Object containing the entity properties.
    * @returns New entity, populated from data object.
    */
-  private _createEntity(data: any): T {
+  private _createEntity(json: any): T {
     const entity: T = new this._type;
 
-    for (const name in data) {
-      if (!data.hasOwnProperty(name) || name.startsWith('@')) {
+    for (const name in json) {
+      if (!json.hasOwnProperty(name) || name.startsWith('@')) {
         continue;
       }
 
-      this._populateField(entity, name, data[name]);
+      this._populateField(entity, name, json[name]);
     }
 
     return entity;

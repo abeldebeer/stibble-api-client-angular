@@ -11,6 +11,11 @@ export interface Repository<T extends Entity> {
   /**
    * Find all entities.
    */
-  findAll(): Observable<T[]>;
+  findAll(): Observable<Array<T>>;
+
+  /**
+   * Find all entities by their parent (if supported).
+   */
+  findByParent(parentId: string): Observable<Array<T>>;
 
 }

@@ -1,4 +1,4 @@
-import { PATH_API } from './../client/client-constants';
+import { PATH_API, KEY_PARENT } from './../client/client-constants';
 import { Observable } from 'rxjs/Observable';
 import { Headers, Response, Http, RequestOptionsArgs } from '@angular/http';
 import { TokenStorageProvider } from '../token/token-storage-provider.service';
@@ -28,6 +28,16 @@ export class EntityGateway implements Gateway {
 
   findAll(): Observable<Response> {
     return this._http.get(this._createUrl(), this._createRequestOptions());
+  }
+
+  findByParent(parentId: string): Observable<Response> {
+    const params: any = {};
+    params[KEY_PARENT] = parentId;
+
+    const options: RequestOptionsArgs = this._createRequestOptions();
+    options.params = params;
+
+    return this._http.get(this._createUrl(), options);
   }
 
   private _createRequestOptions(): RequestOptionsArgs {

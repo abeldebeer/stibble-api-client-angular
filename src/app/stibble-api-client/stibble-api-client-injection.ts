@@ -1,3 +1,4 @@
+import { ProjectLocation } from './stibble/project-location';
 import { EntityMetadataService } from './entity/entity-metadata-service.service';
 import { Injector } from '@angular/core';
 import { Project } from './stibble/project';
@@ -20,7 +21,7 @@ function repositoryFactory(type: { new (): Entity; }): Function {
  * All entities which will have generated repositories.
  */
 const entityClasses: { new (): Entity; }[] = [
-  App, Project, User
+  App, Project, ProjectLocation, User
 ];
 
 /**

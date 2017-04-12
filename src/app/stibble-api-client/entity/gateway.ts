@@ -13,4 +13,9 @@ export interface Gateway {
    */
   findAll(): Observable<Response>;
 
+  /**
+   * Find all entities by their parent (if supported).
+   */
+  findByParent(parentId: string): Observable<Response>;
+
 }
