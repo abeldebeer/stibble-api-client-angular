@@ -5,9 +5,9 @@ import { Observable } from 'rxjs/Observable';
 export interface Gateway {
 
   /**
-   * Create the provided entity.
+   * Create an entity with the provided data.
    */
-  create(entity: Entity): Observable<Response>;
+  create(data: { [key: string]: any }): Observable<Response>;
 
   /**
    * Find one entity by its unique resource ID.
@@ -20,8 +20,13 @@ export interface Gateway {
   findAll(): Observable<Response>;
 
   /**
-   * Find all entities by their parent (if supported).
+   * Find all entities that match the provided parameters.
    */
-  findByParent(parentId: string): Observable<Response>;
+  findByParams(params: { [key: string]: any }): Observable<Response>;
+
+  /**
+   * Update an entity with the provided id and data.
+   */
+  update(id: string, data: { [key: string]: any }): Observable<Response>;
 
 }

@@ -28,4 +28,9 @@ export interface Repository<T extends Entity> {
    */
   findFirst(): Observable<T>;
 
+  /**
+   * Update the provided entity.
+   */
+  update(entity: T): Observable<T>;
+
 }

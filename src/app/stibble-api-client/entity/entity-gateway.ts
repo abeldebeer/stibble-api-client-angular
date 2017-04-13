@@ -1,13 +1,15 @@
-import { PATH_API, KEY_PARENT } from './../client/client-constants';
+import { PATH_API } from './../client/client-constants';
 import { Observable } from 'rxjs/Observable';
 import { Headers, Response, Http, RequestOptionsArgs } from '@angular/http';
 import { TokenStorageProvider } from '../token/token-storage-provider.service';
 import { ClientConfig } from '../client/client-config.service';
-import { Entity } from './entity';
 import { EntityClassMetadata } from './entity-metadata';
 import { Gateway } from './gateway';
 
-const REQUEST_OPTIONS: RequestOptionsArgs = {
+/**
+ * Default options for entity endpoint requests.
+ */
+const DEFAULT_REQUEST_OPTIONS: RequestOptionsArgs = {
   headers: new Headers({
     'Accept': 'application/ld+json',
     'Content-Type': 'application/json; charset=utf-8',
@@ -27,8 +29,8 @@ export class EntityGateway implements Gateway {
   // PUBLIC METHODS
   // -----------------------------------------------------------------------------------------------
 
-  create(entity: Entity): Observable<Response> {
-    return this._http.post(this._createUrl(), entity, this._createRequestOptions());
+  create(data: { [key: string]: any }): Observable<Response> {
+    return this._http.post(this._createUrl(), data, this._createRequestOptions());
   }
 
   find(id: string): Observable<Response> {
@@ -39,24 +41,34 @@ export class EntityGateway implements Gateway {
     return this._http.get(this._createUrl(), this._createRequestOptions());
   }
 
-  findByParent(parentId: string): Observable<Response> {
-    const params: any = {};
-    params[KEY_PARENT] = parentId;
+  findByParams(params: { [key: string]: any }): Observable<Response> {
+    return this._http.get(this._createUrl(), this._createRequestOptions(params));
+  }
 
-    const options: RequestOptionsArgs = this._createRequestOptions();
-    options.params = params;
-
-    return this._http.get(this._createUrl(), options);
+  update(id: string, data: { [key: string]: any }): Observable<Response> {
+    return this._http.put(this._createUrl(id), data, this._createRequestOptions());
   }
 
   // -----------------------------------------------------------------------------------------------
   // PRIVATE METHODS
   // -----------------------------------------------------------------------------------------------
 
-  private _createRequestOptions(): RequestOptionsArgs {
-    REQUEST_OPTIONS.headers.set('Authorization', `Bearer ${this._tokenStorageProvider.getToken()}`);
+  /**
+   * @param params Optional request parameters (for URL query).
+   */
+  private _createRequestOptions(params?: { [key: string]: any }): RequestOptionsArgs {
+    // create new options based on defaults
+    const options: RequestOptionsArgs = { ...DEFAULT_REQUEST_OPTIONS };
 
-    return REQUEST_OPTIONS;
+    // set token bearer by fetching it from storage
+    options.headers.set('Authorization', `Bearer ${this._tokenStorageProvider.getToken()}`);
+
+    // add params if provided
+    if (params) {
+      options.params = params;
+    }
+
+    return options;
   }
 
   /**

@@ -22,6 +22,24 @@ interface HydraCollectionResult {
   numTotalItems: number;
 }
 
+class PrePersistResult {
+
+  /**
+   * Array of error messages, empty if everything is valid.
+   */
+  errors: Array<string> = [];
+
+  /**
+   * Object of filtered data after processing.
+   */
+  filteredData: any = {};
+
+  isValid(): boolean {
+    return this.errors.length < 1;
+  }
+
+}
+
 export class EntityRepository<T extends Entity> implements Repository<T> {
 
   constructor(
@@ -35,13 +53,13 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
   // -----------------------------------------------------------------------------------------------
 
   create(entity: T): Observable<T> {
-    const errors = this._validateBeforeCreate(entity);
+    const result = this._processBeforeCreate(entity);
 
-    if (errors.length > 0) {
-      return Observable.throw(`Cannot create '${this._name()}': ${errors.join(', ')}`);
+    if (!result.isValid()) {
+      return Observable.throw(`Cannot create '${this._name()}': ${result.errors.join(', ')}`);
     }
 
-    return this._gateway.create(entity)
+    return this._gateway.create(result.filteredData)
       .map(response => this._createEntity(response.json()));
   }
 
@@ -62,13 +80,26 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
       console.warn(`Entity '${this._name()}' does not have a '${KEY_PARENT}' field`);
     }
 
-    return this._gateway.findByParent(parentId)
+    const params: any = { [KEY_PARENT]: parentId };
+
+    return this._gateway.findByParams(params)
       .map(response => this._createEntities(response.json()));
   }
 
   findFirst(): Observable<T> {
     return this.findAll()
       .map(entities => entities[0]);
+  }
+
+  update(entity: T): Observable<T> {
+    const result = this._processBeforeUpdate(entity);
+
+    if (!result.isValid()) {
+      return Observable.throw(`Cannot update '${this._name()}': ${result.errors.join(', ')}`);
+    }
+
+    return this._gateway.update(entity.id, result.filteredData)
+      .map(response => this._createEntity(response.json()));
   }
 
   // -----------------------------------------------------------------------------------------------
@@ -148,15 +179,16 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
   }
 
   /**
-   * @param entity The entity to validate.
-   * @returns Array of error messages, empty array if no errors.
+   * @param entity The entity to process.
+   * @returns Result object, containing possible errors and filtered data.
    */
-  private _validateBeforeCreate(entity: any): Array<string> {
-    const errors: Array<string> = [];
+  private _processBeforeCreate(entity: T): PrePersistResult {
+    const result = new PrePersistResult();
+    result.filteredData = entity;
 
     if (!entity) {
-      errors.push('Entity is empty / undefined');
-      return errors;
+      result.errors.push('Entity is empty / undefined');
+      return result;
     }
 
     // check all field metadata
@@ -167,11 +199,45 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
 
       // add error when required field is empty
       if (typeof entity[name] === 'undefined' && field.flags.indexOf(Flag.REQUIRED) > -1) {
-        errors.push(`Property '${name}' is required`);
+        result.errors.push(`Required property '${name}' is invalid`);
       }
     });
 
-    return errors;
+    return result;
+  }
+
+  /**
+   * @param entity The entity to process.
+   * @returns Result object, containing possible errors and filtered data.
+   */
+  private _processBeforeUpdate(entity: T): PrePersistResult {
+    const result = new PrePersistResult();
+
+    if (!entity) {
+      result.errors.push('Entity is undefined');
+    } else if (!entity.id) {
+      result.errors.push(`Property 'id' is invalid`);
+    }
+
+    // initial checks fail: skip the rest
+    if (!result.isValid()) {
+      return result;
+    }
+
+    // check all field metadata
+    this._metadataService.getAllFieldMetadata(this._type).forEach((field, name) => {
+      // no entity value for this field? skip
+      if (typeof entity[name] === 'undefined') {
+        return;
+      }
+
+      // no flags or field is not immutable? add to filtered data
+      if (!field.flags || field.flags.indexOf(Flag.IMMUTABLE) < 0) {
+        result.filteredData[name] = entity[name];
+      }
+    });
+
+    return result;
   }
 
 }

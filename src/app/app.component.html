@@ -2,6 +2,14 @@
 
 <div *ngIf="userApp">
   <h2>{{userApp.title}}</h2>
+
+  <div *ngIf="userApp.projects">
+    <h3>Projects:</h3>
+
+    <ul>
+      <li *ngFor="let project of userApp.projects">{{project}}</li>
+    </ul>
+  </div>
 </div>
 
 <div *ngIf="!userApp">
