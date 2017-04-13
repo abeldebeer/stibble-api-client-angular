@@ -25,6 +25,18 @@ export class EntityMetadataService {
     EntityMetadataService._fieldMetadata.set(target, map);
   }
 
+  public static getClassMetadata(target: Function): EntityClassMetadata {
+    return EntityMetadataService._classMetadata.get(target);
+  }
+
+  public static getFieldMetadata(target: Function, propertyKey: string): EntityFieldMetadata {
+    return EntityMetadataService._fieldMetadata.get(target).get(propertyKey);
+  }
+
+  public static getAllFieldMetadata(target: Function): Map<string, EntityFieldMetadata> {
+    return EntityMetadataService._fieldMetadata.get(target);
+  }
+
   // -----------------------------------------------------------------------------------------------
   // NON-STATIC
   // -----------------------------------------------------------------------------------------------

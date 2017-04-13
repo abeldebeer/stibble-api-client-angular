@@ -152,26 +152,19 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
   }
 
   /**
-   * @param entity The entity to persist.
    * @param field Field metadata.
-   * @param result Result object, containing possible errors and filtered data.
+   * @returns Whether the field metadata contains the 'IMMUTABLE' flag.
    */
-  private _fixParentBeforeCreate(entity: T, field: EntityFieldMetadata, result: PrePersistResult) {
-    const initialParent: string = entity[KEY_PARENT];
+  private _fieldIsImmutable(field: EntityFieldMetadata): boolean {
+    return field.flags && field.flags.indexOf(Flag.IMMUTABLE) > -1;
+  }
 
-    // already is IRI? skip
-    if (isIri(initialParent)) {
-      return;
-    }
-
-    if (field.entity) {
-      const classMeta = this._metadataService.getClassMetadata(field.entity);
-
-      // replace parent value with IRI in filtered data
-      result.filteredData[KEY_PARENT] = createIri(classMeta, initialParent);
-    } else {
-      result.errors.push(`Property '${KEY_PARENT}' requires an '${KEY_ENTITY}' reference`);
-    }
+  /**
+   * @param field Field metadata.
+   * @returns Whether the field metadata contains the 'REQUIRED' flag.
+   */
+  private _fieldIsRequired(field: EntityFieldMetadata): boolean {
+    return field.flags && field.flags.indexOf(Flag.REQUIRED) > -1;
   }
 
   /**
@@ -196,9 +189,9 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
       return;
     }
 
-    if (metadata.convert) {
+    if (metadata.deserialize) {
       // apply convert function to raw value
-      entity[name] = metadata.convert(value);
+      entity[name] = metadata.deserialize(value);
     } else {
       entity[name] = value;
     }
@@ -220,17 +213,17 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
 
     // check all field metadata
     this._metadataService.getAllFieldMetadata(this._type).forEach((field, name) => {
-      if (!field.flags) {
-        return;
-      }
+      const value: any = (<any>entity)[name];
+      const isDefined = typeof value !== 'undefined';
 
       // add error when required field is empty
-      if (typeof entity[name] === 'undefined' && field.flags.indexOf(Flag.REQUIRED) > -1) {
+      if (!isDefined && this._fieldIsRequired(field)) {
         result.errors.push(`Required property '${name}' is invalid`);
       }
 
-      if (name === KEY_PARENT) {
-        this._fixParentBeforeCreate(entity, field, result);
+      // apply serialization function
+      if (isDefined && field.serialize) {
+        result.filteredData[name] = field.serialize(value, field);
       }
     });
 
@@ -257,14 +250,18 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
 
     // check all field metadata
     this._metadataService.getAllFieldMetadata(this._type).forEach((field, name) => {
-      // no entity value for this field? skip
-      if (typeof entity[name] === 'undefined') {
+      const value: any = (<any>entity)[name];
+
+      // no entity value or field is immutable? skip update
+      if (typeof value === 'undefined' || this._fieldIsImmutable(field)) {
         return;
       }
 
-      // no flags or field is not immutable? add to filtered data
-      if (!field.flags || field.flags.indexOf(Flag.IMMUTABLE) < 0) {
-        result.filteredData[name] = entity[name];
+      if (field.serialize) {
+        // apply serialization function
+        result.filteredData[name] = field.serialize(value, field);
+      } else {
+        result.filteredData[name] = value;
       }
     });
 

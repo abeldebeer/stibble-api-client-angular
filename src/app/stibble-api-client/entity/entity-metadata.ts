@@ -1,3 +1,4 @@
+import { EntityFieldMetadata } from './entity-metadata';
 import { Entity } from './entity';
 
 /**
@@ -33,7 +34,7 @@ export interface EntityFieldMetadata {
   /**
    * Optional: function that can be included to convert the value that is returned from the API.
    */
-  convert?: Function;
+  deserialize?: (value: string | number | boolean, field?: EntityFieldMetadata) => any;
 
   /**
    * Optional: the concrete entity type that is referenced by this field.
@@ -44,5 +45,10 @@ export interface EntityFieldMetadata {
    * Optional: array of flags that can be included to describe the field.
    */
   flags?: EntityFieldFlags[];
+
+  /**
+   * Optional: function that can be included to convert the value before it is sent to the API.
+   */
+  serialize?: (value: any, field?: EntityFieldMetadata) => string | number | boolean;
 
 }
