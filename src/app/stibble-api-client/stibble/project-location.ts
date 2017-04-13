@@ -1,3 +1,5 @@
+import { Project } from './project';
+import { User } from './user';
 import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
@@ -5,9 +7,6 @@ import { convertEntityId } from '../util/functions';
 
 @EntityClass({ endpoint: 'project-locations' })
 export class ProjectLocation implements OwnedEntity {
-
-  @EntityField({ flags: [Flag.IMMUTABLE] })
-  iri: string;
 
   @EntityField({ convert: convertEntityId, flags: [Flag.IMMUTABLE] })
   id: string;
@@ -18,12 +17,13 @@ export class ProjectLocation implements OwnedEntity {
   @EntityField({ convert: Date.parse, flags: [Flag.IMMUTABLE] })
   updatedAt: Date;
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: User, flags: [Flag.IMMUTABLE] })
   owner: string;
 
-  @EntityField({ flags: [Flag.IMMUTABLE, Flag.REQUIRED] })
+  @EntityField({ entity: Project, flags: [Flag.IMMUTABLE, Flag.REQUIRED] })
   parent: string;
 
+  // TODO: add `entity:ProjectLocationPage`
   @EntityField({ flags: [Flag.IMMUTABLE] })
   pages: Array<string>;
 

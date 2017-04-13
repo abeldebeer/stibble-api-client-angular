@@ -1,3 +1,6 @@
+import { User } from './user';
+import { ProjectLocation } from './project-location';
+import { App } from './app';
 import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
@@ -8,9 +11,6 @@ export type MapType = 'GOOGLE_OUTDOOR' | 'IMAGE';
 @EntityClass({ endpoint: 'projects' })
 export class Project implements OwnedEntity {
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
-  iri: string;
-
   @EntityField({ convert: convertEntityId, flags: [Flag.IMMUTABLE] })
   id: string;
 
@@ -20,13 +20,13 @@ export class Project implements OwnedEntity {
   @EntityField({ convert: Date.parse, flags: [Flag.IMMUTABLE] })
   updatedAt: Date;
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: User, flags: [Flag.IMMUTABLE] })
   owner: string;
 
-  @EntityField({ flags: [Flag.IMMUTABLE, Flag.REQUIRED] })
+  @EntityField({ entity: App, flags: [Flag.IMMUTABLE, Flag.REQUIRED] })
   parent: string;
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: ProjectLocation, flags: [Flag.IMMUTABLE] })
   locations: Array<string>;
 
   @EntityField({ flags: [Flag.REQUIRED] })

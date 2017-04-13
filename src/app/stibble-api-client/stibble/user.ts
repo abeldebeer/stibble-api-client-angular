@@ -6,9 +6,6 @@ import { convertEntityId } from '../util/functions';
 @EntityClass({ endpoint: 'users' })
 export class User implements Entity {
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
-  iri: string;
-
   @EntityField({ convert: convertEntityId, flags: [Flag.IMMUTABLE] })
   id: string;
 

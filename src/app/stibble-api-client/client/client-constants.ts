@@ -9,10 +9,9 @@ export const DEFAULT_LOCAL_STORAGE_TOKEN_KEY = 'stibble_api_client_angular_token
 // KEYS
 // -------------------------------------------------------------------------------------------------
 
-export const KEY_HYDRA_ID = '@id';
+export const KEY_ENTITY = 'entity';
 export const KEY_HYDRA_ITEMS = 'hydra:member';
 export const KEY_HYDRA_TOTAL_ITEMS = 'hydra:totalItems';
-export const KEY_IRI = 'iri';
 export const KEY_PARENT = 'parent';
 
 // -------------------------------------------------------------------------------------------------

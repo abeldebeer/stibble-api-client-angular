@@ -1,6 +1,7 @@
 import { EntityFieldMetadata, EntityFieldFlags as Flag } from './entity-metadata';
 import { Observable } from 'rxjs/Observable';
 import { Gateway } from './gateway';
+import { createIri, isIri } from './gateway-helper';
 import { EntityMetadataService } from './entity-metadata-service.service';
 import { Repository } from './repository';
 import { Entity } from './entity';
@@ -8,10 +9,9 @@ import 'rxjs/Rx';
 
 import {
   KEY_PARENT,
-  KEY_IRI,
-  KEY_HYDRA_ID,
   KEY_HYDRA_ITEMS,
-  KEY_HYDRA_TOTAL_ITEMS
+  KEY_HYDRA_TOTAL_ITEMS,
+  KEY_ENTITY
 } from './../client/client-constants';
 
 /**
@@ -140,23 +140,38 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     const metadata = this._metadataService.getAllFieldMetadata(this._type);
 
     for (const name in json) {
-      if (!json.hasOwnProperty(name)) {
+      // initial check on name
+      if (!json.hasOwnProperty(name) || name.startsWith('@')) {
         continue;
       }
 
-      const value = json[name];
-      let field = name;
-
-      if (name === KEY_HYDRA_ID) {
-        field = KEY_IRI;
-      } else if (name.startsWith('@')) {
-        continue;
-      }
-
-      this._populateField(entity, field, value, metadata);
+      this._populateField(entity, name, json[name], metadata);
     }
 
     return entity;
+  }
+
+  /**
+   * @param entity The entity to persist.
+   * @param field Field metadata.
+   * @param result Result object, containing possible errors and filtered data.
+   */
+  private _fixParentBeforeCreate(entity: T, field: EntityFieldMetadata, result: PrePersistResult) {
+    const initialParent: string = entity[KEY_PARENT];
+
+    // already is IRI? skip
+    if (isIri(initialParent)) {
+      return;
+    }
+
+    if (field.entity) {
+      const classMeta = this._metadataService.getClassMetadata(field.entity);
+
+      // replace parent value with IRI in filtered data
+      result.filteredData[KEY_PARENT] = createIri(classMeta, initialParent);
+    } else {
+      result.errors.push(`Property '${KEY_PARENT}' requires an '${KEY_ENTITY}' reference`);
+    }
   }
 
   /**
@@ -197,6 +212,7 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     const result = new PrePersistResult();
     result.filteredData = entity;
 
+    // initial checks fail: skip the rest
     if (!entity) {
       result.errors.push('Entity is empty / undefined');
       return result;
@@ -211,6 +227,10 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
       // add error when required field is empty
       if (typeof entity[name] === 'undefined' && field.flags.indexOf(Flag.REQUIRED) > -1) {
         result.errors.push(`Required property '${name}' is invalid`);
+      }
+
+      if (name === KEY_PARENT) {
+        this._fixParentBeforeCreate(entity, field, result);
       }
     });
 

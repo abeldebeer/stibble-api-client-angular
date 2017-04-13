@@ -5,6 +5,7 @@ import { TokenStorageProvider } from '../token/token-storage-provider.service';
 import { ClientConfig } from '../client/client-config.service';
 import { EntityClassMetadata } from './entity-metadata';
 import { Gateway } from './gateway';
+import { createIri } from './gateway-helper';
 
 /**
  * Default options for entity endpoint requests.
@@ -79,10 +80,7 @@ export class EntityGateway implements Gateway {
    * @param id Resource unique identifier (optional).
    */
   private _createUrl(id?: string): string {
-    const url: string = this._clientConfig.baseUrl + PATH_API + this._metadata.endpoint;
-
-    // id provided? append to url
-    return url + (id ? `/${id}` : '');
+    return this._clientConfig.baseUrl + createIri(this._metadata, id);
   }
 
 }

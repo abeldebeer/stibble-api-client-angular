@@ -1,3 +1,5 @@
+import { Entity } from './entity';
+
 /**
  * Type for data object that is sent to @EntityClass decorator.
  */
@@ -32,6 +34,11 @@ export interface EntityFieldMetadata {
    * Optional: function that can be included to convert the value that is returned from the API.
    */
   convert?: Function;
+
+  /**
+   * Optional: the concrete entity type that is referenced by this field.
+   */
+  entity?: { new (): Entity; };
 
   /**
    * Optional: array of flags that can be included to describe the field.
