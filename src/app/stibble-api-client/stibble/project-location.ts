@@ -1,3 +1,5 @@
+import { Beacon } from './beacon';
+import { ProjectLocationPage } from './project-location-page';
 import { Project } from './project';
 import { User } from './user';
 import { OwnedEntity } from '../entity/owned-entity';
@@ -23,8 +25,7 @@ export class ProjectLocation implements OwnedEntity {
   @EntityField({ entity: Project, flags: [Flag.IMMUTABLE, Flag.REQUIRED] })
   parent: string;
 
-  // TODO: add `entity:ProjectLocationPage`
-  @EntityField({ flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: ProjectLocationPage, flags: [Flag.IMMUTABLE] })
   pages: Array<string>;
 
   @EntityField({ flags: [Flag.REQUIRED] })
@@ -42,7 +43,7 @@ export class ProjectLocation implements OwnedEntity {
   @EntityField()
   longitude: string;
 
-  @EntityField()
+  @EntityField({ entity: Beacon })
   beacon: string;
 
 }

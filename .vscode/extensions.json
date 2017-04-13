@@ -6,6 +6,7 @@
     "streetsidesoftware.code-spell-checker",
     "johnpapa.angular2",
     "EditorConfig.editorconfig",
-    "eg2.tslint"
+    "eg2.tslint",
+    "formulahendry.auto-close-tag"
   ]
 }

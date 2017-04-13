@@ -1,13 +1,12 @@
-import { AppInfoBlock } from './app-info-block';
-import { Project } from './project';
+import { ContentBlock } from './../entity/content-block';
+import { App } from './app';
 import { User } from './user';
-import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
 import { convertEntityId } from '../util/functions';
 
-@EntityClass({ endpoint: 'apps' })
-export class App implements OwnedEntity {
+@EntityClass({ endpoint: 'app-info-blocks' })
+export class AppInfoBlock implements ContentBlock {
 
   @EntityField({ convert: convertEntityId, flags: [Flag.IMMUTABLE] })
   id: string;
@@ -21,16 +20,16 @@ export class App implements OwnedEntity {
   @EntityField({ entity: User, flags: [Flag.IMMUTABLE] })
   owner: string;
 
-  @EntityField({ entity: Project, flags: [Flag.IMMUTABLE] })
-  projects: Array<string>;
-
-  @EntityField({ entity: AppInfoBlock, flags: [Flag.IMMUTABLE] })
-  info: Array<string>;
+  @EntityField({ entity: App, flags: [Flag.IMMUTABLE, Flag.REQUIRED] })
+  parent: string;
 
   @EntityField({ flags: [Flag.REQUIRED] })
-  title: string;
+  blockIndex: number;
+
+  @EntityField({ flags: [Flag.REQUIRED] })
+  type: string;
 
   @EntityField()
-  subTitle: string;
+  value: any;
 
 }

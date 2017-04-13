@@ -1,3 +1,4 @@
+import { ProjectInfoBlock } from './project-info-block';
 import { User } from './user';
 import { ProjectLocation } from './project-location';
 import { App } from './app';
@@ -28,6 +29,9 @@ export class Project implements OwnedEntity {
 
   @EntityField({ entity: ProjectLocation, flags: [Flag.IMMUTABLE] })
   locations: Array<string>;
+
+  @EntityField({ entity: ProjectInfoBlock, flags: [Flag.IMMUTABLE] })
+  info: Array<string>;
 
   @EntityField({ flags: [Flag.REQUIRED] })
   title: string;
