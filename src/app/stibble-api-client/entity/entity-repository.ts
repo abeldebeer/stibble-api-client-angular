@@ -63,6 +63,17 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
       .map(response => this._createEntity(response.json()));
   }
 
+  delete(entity: T): Observable<string> {
+    const id = entity.id;
+
+    if (!id) {
+      return Observable.throw(`Cannot delete '${this._name()}': Property 'id' is invalid`);
+    }
+
+    return this._gateway.delete(id)
+      .map(response => id);
+  }
+
   find(id: string): Observable<T> {
     return this._gateway.find(id)
       .map(response => this._createEntity(response.json()));

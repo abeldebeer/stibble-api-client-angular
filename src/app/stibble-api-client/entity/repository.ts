@@ -9,6 +9,11 @@ export interface Repository<T extends Entity> {
   create(entity: T): Observable<T>;
 
   /**
+   * Delete the provided entity. Returned value is the ID of the entity that was deleted.
+   */
+  delete(entity: T): Observable<string>;
+
+  /**
    * Find one entity by its unique resource ID.
    */
   find(id: string): Observable<T>;

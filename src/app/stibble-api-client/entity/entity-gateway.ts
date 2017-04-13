@@ -33,6 +33,10 @@ export class EntityGateway implements Gateway {
     return this._http.post(this._createUrl(), data, this._createRequestOptions());
   }
 
+  delete(id: string): Observable<Response> {
+    return this._http.delete(this._createUrl(id), this._createRequestOptions());
+  }
+
   find(id: string): Observable<Response> {
     return this._http.get(this._createUrl(id), this._createRequestOptions());
   }
