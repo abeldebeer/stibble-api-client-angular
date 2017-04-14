@@ -14,7 +14,12 @@ $ npm install stibble-api-client-angular --save
 
 ## Usage
 
-See the [demo app](src/app/app.module.ts) on how to use the library.
+See the [demo app](src/app) on how to use the library.
+
+## Source
+
+This project has been set up with the Angular CLI. To leverage the features of the CLI, this
+library's source code is defined as [a child-module of the app](src/app/stibble-api-client).
 
 ## Publishing the library
 
