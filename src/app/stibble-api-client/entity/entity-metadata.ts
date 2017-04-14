@@ -16,9 +16,15 @@ export interface EntityClassMetadata {
 export enum EntityFieldFlags {
 
   /**
-   * This field can not be updated (directly).
+   * This field's value is generated, so it should not be included when creating or updating the
+   * entity.
    */
-  IMMUTABLE,
+  GENERATED,
+
+  /**
+   * This field can not be updated.
+   */
+  NO_UPDATE,
 
   /**
    * This field must be included when creating the entity.

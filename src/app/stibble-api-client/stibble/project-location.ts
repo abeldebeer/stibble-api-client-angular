@@ -10,27 +10,30 @@ import { normalizeId, idToIri } from '../util/functions';
 @EntityClass({ endpoint: 'project-locations' })
 export class ProjectLocation implements OwnedEntity {
 
-  @EntityField({ deserialize: normalizeId, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   createdAt: Date;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ entity: User, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: User, flags: [Flag.GENERATED] })
   owner: string;
 
   @EntityField({
     serialize: idToIri,
     entity: Project,
-    flags: [Flag.IMMUTABLE, Flag.REQUIRED]
+    flags: [Flag.REQUIRED, Flag.NO_UPDATE]
   })
   parent: string;
 
-  @EntityField({ entity: ProjectLocationPage, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: ProjectLocationPage, flags: [Flag.GENERATED] })
   pages: Array<string>;
+
+  @EntityField({ serialize: idToIri, entity: Beacon })
+  beacon: string;
 
   @EntityField({ flags: [Flag.REQUIRED] })
   title: string;
@@ -46,8 +49,5 @@ export class ProjectLocation implements OwnedEntity {
 
   @EntityField()
   longitude: string;
-
-  @EntityField({ entity: Beacon })
-  beacon: string;
 
 }

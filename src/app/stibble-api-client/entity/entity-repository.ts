@@ -1,3 +1,4 @@
+import { Response } from '@angular/http';
 import { EntityFieldMetadata, EntityFieldFlags as Flag } from './entity-metadata';
 import { Observable } from 'rxjs/Observable';
 import { Gateway } from './gateway';
@@ -60,7 +61,7 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     }
 
     return this._gateway.create(result.filteredData)
-      .map(response => this._createEntity(response.json()));
+      .map(this._extractEntity);
   }
 
   delete(entity: T): Observable<string> {
@@ -76,12 +77,12 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
 
   find(id: string): Observable<T> {
     return this._gateway.find(id)
-      .map(response => this._createEntity(response.json()));
+      .map(this._extractEntity);
   }
 
   findAll(): Observable<Array<T>> {
     return this._gateway.findAll()
-      .map(response => this._createEntities(response.json()));
+      .map(this._extractEntities);
   }
 
   findByParent(parentId: string): Observable<Array<T>> {
@@ -94,7 +95,7 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     const params: any = { [KEY_PARENT]: parentId };
 
     return this._gateway.findByParams(params)
-      .map(response => this._createEntities(response.json()));
+      .map(this._extractEntities);
   }
 
   findFirst(): Observable<T> {
@@ -110,7 +111,7 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     }
 
     return this._gateway.update(entity.id, result.filteredData)
-      .map(response => this._createEntity(response.json()));
+      .map(this._extractEntity);
   }
 
   // -----------------------------------------------------------------------------------------------
@@ -118,24 +119,10 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
   // -----------------------------------------------------------------------------------------------
 
   /**
-   * @param json Object containing the entity objects.
-   * @returns Array of created entities.
+   * @param json JSON data.
+   * @returns Array of entity objects.
    */
-  private _createEntities(json: any): Array<T> {
-    // make the hydra structure explicit
-    const result: HydraCollectionResult = {
-      items: json[KEY_HYDRA_ITEMS],
-      numTotalItems: json[KEY_HYDRA_TOTAL_ITEMS]
-    };
-
-    return result.items.map(data => this._createEntity(data));
-  }
-
-  /**
-   * @param json Object containing the entity properties.
-   * @returns New entity, populated from data object.
-   */
-  private _createEntity(json: any): T {
+  private _deserializeEntity = (json: any): T => {
     const entity: T = new this._type;
     const metadata = this._metadataService.getAllFieldMetadata(this._type);
 
@@ -145,18 +132,50 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
         continue;
       }
 
-      this._populateField(entity, name, json[name], metadata);
+      this._populateField(entity, name, json[name], metadata.get(name));
     }
 
     return entity;
   }
 
   /**
-   * @param field Field metadata.
-   * @returns Whether the field metadata contains the 'IMMUTABLE' flag.
+   * @param response Response object from API.
+   * @returns Array of entity objects.
    */
-  private _fieldIsImmutable(field: EntityFieldMetadata): boolean {
-    return field.flags && field.flags.indexOf(Flag.IMMUTABLE) > -1;
+  private _extractEntities = (response: Response): Array<T> => {
+    const json: any = response.json();
+
+    // make the hydra structure explicit
+    const result: HydraCollectionResult = {
+      items: json[KEY_HYDRA_ITEMS],
+      numTotalItems: json[KEY_HYDRA_TOTAL_ITEMS]
+    };
+
+    return result.items.map(this._deserializeEntity);
+  }
+
+  /**
+   * @param response Response object from API.
+   * @returns Array of entity objects.
+   */
+  private _extractEntity = (response: Response): T => {
+    return this._deserializeEntity(response.json());
+  }
+
+  /**
+   * @param field Field metadata.
+   * @returns Whether the field metadata contains the 'NO_UPDATE' flag.
+   */
+  private _fieldCannotBeUpdated(field: EntityFieldMetadata): boolean {
+    return field.flags && field.flags.indexOf(Flag.NO_UPDATE) > -1;
+  }
+
+  /**
+   * @param field Field metadata.
+   * @returns Whether the field metadata contains the 'GENERATED' flag.
+   */
+  private _fieldIsGenerated(field: EntityFieldMetadata): boolean {
+    return field.flags && field.flags.indexOf(Flag.GENERATED) > -1;
   }
 
   /**
@@ -180,17 +199,14 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
    * @param value Property value.
    * @param metadata Map of entity field metadata.
    */
-  private _populateField(entity: any, name: string, value: any,
-    fieldMetadata: Map<string, EntityFieldMetadata>) {
-    const metadata: EntityFieldMetadata = fieldMetadata.get(name);
-
+  private _populateField(entity: any, name: string, value: any, metadata: EntityFieldMetadata) {
     if (!metadata) {
       console.warn(`No @EntityField() for '${this._name()}.${name}'`);
       return;
     }
 
     if (metadata.deserialize) {
-      // apply convert function to raw value
+      // apply deserialize function to raw value
       entity[name] = metadata.deserialize(value);
     } else {
       entity[name] = value;
@@ -203,6 +219,8 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
    */
   private _processBeforeCreate(entity: T): PrePersistResult {
     const result = new PrePersistResult();
+
+    // default 'filtered' data: entity object
     result.filteredData = entity;
 
     // initial checks fail: skip the rest
@@ -214,15 +232,24 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     // check all field metadata
     this._metadataService.getAllFieldMetadata(this._type).forEach((field, name) => {
       const value: any = (<any>entity)[name];
-      const isDefined = typeof value !== 'undefined';
 
-      // add error when required field is empty
-      if (!isDefined && this._fieldIsRequired(field)) {
-        result.errors.push(`Required property '${name}' is invalid`);
+      if (typeof value === 'undefined') {
+        // add error when required field is empty
+        if (this._fieldIsRequired(field)) {
+          result.errors.push(`Required property '${name}' is invalid`);
+        }
+
+        // skip other checks
+        return;
       }
 
-      // apply serialization function
-      if (isDefined && field.serialize) {
+      // skip fields that are generated
+      if (this._fieldIsGenerated(field)) {
+        return;
+      }
+
+      // apply serialization function to filtered data
+      if (field.serialize) {
         result.filteredData[name] = field.serialize(value, field);
       }
     });
@@ -252,8 +279,10 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     this._metadataService.getAllFieldMetadata(this._type).forEach((field, name) => {
       const value: any = (<any>entity)[name];
 
-      // no entity value or field is immutable? skip update
-      if (typeof value === 'undefined' || this._fieldIsImmutable(field)) {
+      // no entity value or field cannot be updated? skip update
+      if (typeof value === 'undefined' ||
+        this._fieldIsGenerated(field) ||
+        this._fieldCannotBeUpdated(field)) {
         return;
       }
 

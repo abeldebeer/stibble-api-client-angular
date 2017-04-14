@@ -12,29 +12,29 @@ export type MapType = 'GOOGLE_OUTDOOR' | 'IMAGE';
 @EntityClass({ endpoint: 'projects' })
 export class Project implements OwnedEntity {
 
-  @EntityField({ deserialize: normalizeId, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   createdAt: Date;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ entity: User, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: User, flags: [Flag.GENERATED] })
   owner: string;
 
   @EntityField({
     serialize: idToIri,
     entity: App,
-    flags: [Flag.IMMUTABLE, Flag.REQUIRED]
+    flags: [Flag.REQUIRED, Flag.NO_UPDATE]
   })
   parent: string;
 
-  @EntityField({ entity: ProjectLocation, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: ProjectLocation, flags: [Flag.GENERATED] })
   locations: Array<string>;
 
-  @EntityField({ entity: ProjectInfoBlock, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: ProjectInfoBlock, flags: [Flag.GENERATED] })
   info: Array<string>;
 
   @EntityField({ flags: [Flag.REQUIRED] })

@@ -10,22 +10,22 @@ import { normalizeId } from '../util/functions';
 @EntityClass({ endpoint: 'apps' })
 export class App implements OwnedEntity {
 
-  @EntityField({ deserialize: normalizeId, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   createdAt: Date;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ entity: User, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: User, flags: [Flag.GENERATED] })
   owner: string;
 
-  @EntityField({ entity: Project, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: Project, flags: [Flag.GENERATED] })
   projects: Array<string>;
 
-  @EntityField({ entity: AppInfoBlock, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: AppInfoBlock, flags: [Flag.GENERATED] })
   info: Array<string>;
 
   @EntityField({ flags: [Flag.REQUIRED] })

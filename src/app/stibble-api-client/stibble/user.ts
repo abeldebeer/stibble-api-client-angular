@@ -6,25 +6,25 @@ import { normalizeId } from '../util/functions';
 @EntityClass({ endpoint: 'users' })
 export class User implements Entity {
 
-  @EntityField({ deserialize: normalizeId, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   createdAt: Date;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
+  @EntityField({ flags: [Flag.GENERATED] })
   owner: string;
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
+  @EntityField({ flags: [Flag.NO_UPDATE] })
   email: string;
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
+  @EntityField({ flags: [Flag.NO_UPDATE] })
   firstName: string;
 
-  @EntityField({ flags: [Flag.IMMUTABLE] })
+  @EntityField({ flags: [Flag.NO_UPDATE] })
   lastName: string;
 
 }

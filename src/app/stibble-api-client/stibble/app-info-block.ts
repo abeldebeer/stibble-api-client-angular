@@ -8,22 +8,22 @@ import { normalizeId, idToIri } from '../util/functions';
 @EntityClass({ endpoint: 'app-info-blocks' })
 export class AppInfoBlock implements ContentBlock {
 
-  @EntityField({ deserialize: normalizeId, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   createdAt: Date;
 
-  @EntityField({ deserialize: Date.parse, flags: [Flag.IMMUTABLE] })
+  @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ entity: User, flags: [Flag.IMMUTABLE] })
+  @EntityField({ entity: User, flags: [Flag.GENERATED] })
   owner: string;
 
   @EntityField({
     serialize: idToIri,
     entity: App,
-    flags: [Flag.IMMUTABLE, Flag.REQUIRED]
+    flags: [Flag.REQUIRED, Flag.NO_UPDATE]
   })
   parent: string;
 
