@@ -4,6 +4,9 @@ import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
 import { normalizeId, idToIri } from '../util/functions';
 
+/**
+ * Project map type.
+ */
 export type MapType = 'GOOGLE_OUTDOOR' | 'IMAGE';
 
 @EntityClass({ endpoint: 'projects' })

@@ -4,6 +4,11 @@ import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldMetadata, EntityFieldFlags as Flag } from '../entity/entity-metadata';
 import { normalizeId } from '../util/functions';
 
+/**
+ * App publication status.
+ */
+export type Status = 'UNPUBLISHED' | 'PUBLISHED';
+
 @EntityClass({ endpoint: 'apps' })
 export class App implements OwnedEntity {
 
@@ -30,5 +35,8 @@ export class App implements OwnedEntity {
 
   @EntityField()
   subTitle: string;
+
+  @EntityField()
+  status: Status;
 
 }
