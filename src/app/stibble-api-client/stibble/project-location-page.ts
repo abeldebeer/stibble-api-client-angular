@@ -1,6 +1,4 @@
-import { ProjectLocationPageBlock } from './project-location-page-block';
-import { ProjectLocation } from './project-location';
-import { User } from './user';
+import { Entity } from '../entity/entity';
 import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
@@ -18,18 +16,18 @@ export class ProjectLocationPage implements OwnedEntity {
   @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ entity: User, flags: [Flag.GENERATED] })
-  owner: string;
+  @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
+  owner: string | Entity;
 
   @EntityField({
     serialize: idToIri,
-    entity: ProjectLocation,
+    entity: 'ProjectLocation',
     flags: [Flag.REQUIRED, Flag.NO_UPDATE]
   })
-  parent: string;
+  parent: string | Entity;
 
-  @EntityField({ entity: ProjectLocationPageBlock, flags: [Flag.GENERATED] })
-  blocks: Array<string>;
+  @EntityField({ entity: 'ProjectLocationPageBlock', flags: [Flag.GENERATED] })
+  contentBlocks: Array<string | Entity>;
 
   @EntityField({ flags: [Flag.REQUIRED] })
   name: string;

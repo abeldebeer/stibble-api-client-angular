@@ -1,4 +1,4 @@
-import { EntityMetadataService } from './entity-metadata-service.service';
+import { EntityMetadataProvider } from './entity-metadata-provider';
 import { EntityClassMetadata, EntityFieldMetadata } from './entity-metadata';
 
 /**
@@ -9,7 +9,7 @@ import { EntityClassMetadata, EntityFieldMetadata } from './entity-metadata';
 export function EntityClass(metadata: EntityClassMetadata) {
   return function (target: Function) {
     // store metadata in service
-    EntityMetadataService.addClassMetadata(target, metadata);
+    EntityMetadataProvider.addClassMetadata(target, metadata);
   };
 }
 
@@ -21,6 +21,6 @@ export function EntityClass(metadata: EntityClassMetadata) {
 export function EntityField(metadata: EntityFieldMetadata = {}) {
   return function (target: object, propertyKey: string) {
     // store metadata in service
-    EntityMetadataService.addFieldMetadata(target.constructor, propertyKey, metadata);
+    EntityMetadataProvider.addFieldMetadata(target.constructor, propertyKey, metadata);
   };
 }

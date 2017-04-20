@@ -1,3 +1,4 @@
+import { FindAllParameters, FindParameters } from './entity-parameters';
 import { Observable } from 'rxjs/Observable';
 import { Entity } from './entity';
 
@@ -16,22 +17,22 @@ export interface Repository<T extends Entity> {
   /**
    * Find one entity by its unique resource ID.
    */
-  find(id: string): Observable<T>;
+  find(id: string, params?: FindParameters): Observable<T>;
 
   /**
    * Find all entities.
    */
-  findAll(): Observable<Array<T>>;
+  findAll(params?: FindAllParameters): Observable<Array<T>>;
 
   /**
    * Find all entities by their parent (if supported).
    */
-  findByParent(parentId: string): Observable<Array<T>>;
+  findByParent(parentId: string, params?: FindAllParameters): Observable<Array<T>>;
 
   /**
    * Find the first entity of the collection.
    */
-  findFirst(): Observable<T>;
+  findFirst(params?: FindAllParameters): Observable<T>;
 
   /**
    * Update the provided entity.

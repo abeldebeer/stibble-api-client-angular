@@ -38,15 +38,11 @@ export class EntityGateway implements Gateway {
     return this._http.delete(this._createUrl(id), this._createRequestOptions());
   }
 
-  find(id: string): Observable<Response> {
-    return this._http.get(this._createUrl(id), this._createRequestOptions());
+  find(id: string, params?: { [key: string]: any }): Observable<Response> {
+    return this._http.get(this._createUrl(id), this._createRequestOptions(params));
   }
 
-  findAll(): Observable<Response> {
-    return this._http.get(this._createUrl(), this._createRequestOptions());
-  }
-
-  findByParams(params: { [key: string]: any }): Observable<Response> {
+  findAll(params?: { [key: string]: any }): Observable<Response> {
     return this._http.get(this._createUrl(), this._createRequestOptions(params));
   }
 

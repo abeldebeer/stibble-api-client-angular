@@ -1,51 +1,26 @@
+import { FindAllParameters, FindParameters } from './entity-parameters';
 import { Response } from '@angular/http';
-import { EntityFieldMetadata, EntityFieldFlags as Flag } from './entity-metadata';
+import { EntityFieldFlags as Flag, EntityFieldMetadata } from './entity-metadata';
 import { Observable } from 'rxjs/Observable';
 import { Gateway } from './gateway';
-import { createIri, isIri } from './gateway-helper';
-import { EntityMetadataService } from './entity-metadata-service.service';
+import { EntityMetadataProvider } from './entity-metadata-provider';
 import { Repository } from './repository';
 import { Entity } from './entity';
-import 'rxjs/Rx';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/throw';
 
 import {
   KEY_PARENT,
   KEY_HYDRA_ITEMS,
   KEY_HYDRA_TOTAL_ITEMS,
-  KEY_ENTITY
+  KEY_ENTITY,
+  KEY_EXPAND
 } from './../client/client-constants';
-
-/**
- * Type for an API result in the Hydra collection format.
- */
-interface HydraCollectionResult {
-  items: Array<any>;
-  numTotalItems: number;
-}
-
-class PrePersistResult {
-
-  /**
-   * Array of error messages, empty if everything is valid.
-   */
-  errors: Array<string> = [];
-
-  /**
-   * Object of filtered data after processing.
-   */
-  filteredData: any = {};
-
-  isValid(): boolean {
-    return this.errors.length < 1;
-  }
-
-}
 
 export class EntityRepository<T extends Entity> implements Repository<T> {
 
   constructor(
     private _type: { new (): T; },
-    private _metadataService: EntityMetadataService,
     private _gateway: Gateway
   ) { }
 
@@ -75,31 +50,33 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
       .map(response => id);
   }
 
-  find(id: string): Observable<T> {
-    return this._gateway.find(id)
+  find(id: string, params?: FindParameters): Observable<T> {
+    return this._gateway.find(id, this._prepareParams(params))
       .map(this._extractEntity);
   }
 
-  findAll(): Observable<Array<T>> {
-    return this._gateway.findAll()
+  findAll(params?: FindAllParameters): Observable<Array<T>> {
+    return this._gateway.findAll(this._prepareParams(params))
       .map(this._extractEntities);
   }
 
-  findByParent(parentId: string): Observable<Array<T>> {
-    const metadata = this._metadataService.getFieldMetadata(this._type, KEY_PARENT);
+  findByParent(parentId: string, params?: FindAllParameters): Observable<Array<T>> {
+    const metadata = EntityMetadataProvider.getFieldMetadata(this._type, KEY_PARENT);
 
     if (!metadata) {
       console.warn(`Entity '${this._name()}' does not have a '${KEY_PARENT}' field`);
     }
 
-    const params: any = { [KEY_PARENT]: parentId };
+    // prepare parameters for gateway and add parent id
+    const preparedParams = this._prepareParams(params);
+    preparedParams[KEY_PARENT] = parentId;
 
-    return this._gateway.findByParams(params)
+    return this._gateway.findAll(preparedParams)
       .map(this._extractEntities);
   }
 
-  findFirst(): Observable<T> {
-    return this.findAll()
+  findFirst(params?: FindAllParameters): Observable<T> {
+    return this.findAll(params)
       .map(entities => entities[0]);
   }
 
@@ -120,11 +97,20 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
 
   /**
    * @param json JSON data.
-   * @returns Array of entity objects.
+   * @returns Deserialized entity.
    */
-  private _deserializeEntity = (json: any): T => {
-    const entity: T = new this._type;
-    const metadata = this._metadataService.getAllFieldMetadata(this._type);
+  private _deserializeCurrentEntity = (json: any): T => {
+    return this._deserializeEntity(this._type, json);
+  }
+
+  /**
+   * @param type Concrete entity type.
+   * @param json JSON data object.
+   * @returns Newly created and populated entity instance.
+   */
+  private _deserializeEntity<T extends Entity>(type: { new (): T; }, json: any): T {
+    const entity: T = new type;
+    const metadata = EntityMetadataProvider.getAllFieldMetadata(type);
 
     for (const name in json) {
       // initial check on name
@@ -136,6 +122,26 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     }
 
     return entity;
+  }
+
+  /**
+   * @param data The value to process.
+   * @param metadata Metadata for this entity field.
+   * @returns Processed data.
+   */
+  private _deserializeEntityData(data: any, metadata: EntityFieldMetadata): any {
+    if (metadata.entity && data && typeof data === 'object') {
+      // data is entity object
+      const entityClass: any = EntityMetadataProvider.getClassByName(metadata.entity);
+
+      return this._deserializeEntity(entityClass, data);
+    } else if (metadata.deserialize) {
+      // apply custom `deserialize` function on data
+      return metadata.deserialize(data);
+    }
+
+    // no extra operations necessary: required original data
+    return data;
   }
 
   /**
@@ -151,7 +157,7 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
       numTotalItems: json[KEY_HYDRA_TOTAL_ITEMS]
     };
 
-    return result.items.map(this._deserializeEntity);
+    return result.items.map(this._deserializeCurrentEntity);
   }
 
   /**
@@ -159,7 +165,7 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
    * @returns Array of entity objects.
    */
   private _extractEntity = (response: Response): T => {
-    return this._deserializeEntity(response.json());
+    return this._deserializeCurrentEntity(response.json());
   }
 
   /**
@@ -205,12 +211,30 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
       return;
     }
 
-    if (metadata.deserialize) {
-      // apply deserialize function to raw value
-      entity[name] = metadata.deserialize(value);
+    if (value instanceof Array) {
+      entity[name] = value.map(v => this._deserializeEntityData(v, metadata));
     } else {
-      entity[name] = value;
+      entity[name] = this._deserializeEntityData(value, metadata);
     }
+  }
+
+  /**
+   * @param params Parameters object. Can be null.
+   * @returns Parameters, prepared for gateway.
+   */
+  private _prepareParams(params?: FindParameters | FindAllParameters): { [key: string]: any } {
+    if (!params) {
+      return;
+    }
+
+    const prepared: any = {};
+
+    if (params.expand) {
+      // expand parameter is CSV list of entity names
+      prepared[KEY_EXPAND] = params.expand.map(entity => entity && entity.name).join(',');
+    }
+
+    return prepared;
   }
 
   /**
@@ -230,7 +254,7 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     }
 
     // check all field metadata
-    this._metadataService.getAllFieldMetadata(this._type).forEach((field, name) => {
+    EntityMetadataProvider.getAllFieldMetadata(this._type).forEach((field, name) => {
       const value: any = (<any>entity)[name];
 
       if (typeof value === 'undefined') {
@@ -276,7 +300,7 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     }
 
     // check all field metadata
-    this._metadataService.getAllFieldMetadata(this._type).forEach((field, name) => {
+    EntityMetadataProvider.getAllFieldMetadata(this._type).forEach((field, name) => {
       const value: any = (<any>entity)[name];
 
       // no entity value or field cannot be updated? skip update
@@ -295,6 +319,35 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     });
 
     return result;
+  }
+
+}
+
+/**
+ * Type for an API result in the Hydra collection format.
+ */
+interface HydraCollectionResult {
+  items: Array<any>;
+  numTotalItems: number;
+}
+
+/**
+ * Helper class for processing entity data before persisting it.
+ */
+class PrePersistResult {
+
+  /**
+   * Array of error messages, empty if everything is valid.
+   */
+  errors: Array<string> = [];
+
+  /**
+   * Object of filtered data after processing.
+   */
+  filteredData: any = {};
+
+  isValid(): boolean {
+    return this.errors.length < 1;
   }
 
 }

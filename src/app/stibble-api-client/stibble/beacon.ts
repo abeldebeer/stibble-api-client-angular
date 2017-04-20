@@ -1,4 +1,4 @@
-import { User } from './user';
+import { Entity } from '../entity/entity';
 import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
@@ -16,8 +16,8 @@ export class Beacon implements OwnedEntity {
   @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ entity: User, flags: [Flag.GENERATED] })
-  owner: string;
+  @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
+  owner: string | Entity;
 
   @EntityField({ flags: [Flag.REQUIRED] })
   name: string;

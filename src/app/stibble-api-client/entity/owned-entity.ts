@@ -8,6 +8,6 @@ export interface OwnedEntity extends Entity {
   /**
    * URI for the user entity that owns this entity.
    */
-  owner: string;
+  owner: string | Entity;
 
 }

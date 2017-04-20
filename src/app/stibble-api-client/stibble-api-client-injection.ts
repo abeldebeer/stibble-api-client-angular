@@ -4,8 +4,6 @@ import { ProjectInfoBlock } from './stibble/project-info-block';
 import { Beacon } from './stibble/beacon';
 import { AppInfoBlock } from './stibble/app-info-block';
 import { ProjectLocation } from './stibble/project-location';
-import { EntityMetadataService } from './entity/entity-metadata-service.service';
-import { Injector } from '@angular/core';
 import { Project } from './stibble/project';
 import { User } from './stibble/user';
 import { App } from './stibble/app';

@@ -1,4 +1,4 @@
-import { EntityMetadataService } from './../entity/entity-metadata-service.service';
+import { EntityMetadataProvider } from './../entity/entity-metadata-provider';
 import { EntityFieldMetadata } from './../entity/entity-metadata';
 import { isIri, createIri } from '../entity/gateway-helper';
 
@@ -27,5 +27,5 @@ export function idToIri(id: string, field: EntityFieldMetadata): string {
   }
 
   // create IRI
-  return createIri(EntityMetadataService.getClassMetadata(field.entity), id);
+  return createIri(EntityMetadataProvider.getClassMetadata(field.entity), id);
 }

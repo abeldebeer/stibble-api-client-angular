@@ -1,6 +1,4 @@
 import { ContentBlock } from './../entity/content-block';
-import { App } from './app';
-import { User } from './user';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
 import { normalizeId, idToIri } from '../util/functions';
@@ -17,12 +15,12 @@ export class AppInfoBlock implements ContentBlock {
   @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ entity: User, flags: [Flag.GENERATED] })
+  @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
   owner: string;
 
   @EntityField({
     serialize: idToIri,
-    entity: App,
+    entity: 'App',
     flags: [Flag.REQUIRED, Flag.NO_UPDATE]
   })
   parent: string;

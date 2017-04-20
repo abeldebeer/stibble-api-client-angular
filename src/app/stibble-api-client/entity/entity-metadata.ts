@@ -43,9 +43,9 @@ export interface EntityFieldMetadata {
   deserialize?: (value: string | number | boolean, field?: EntityFieldMetadata) => any;
 
   /**
-   * Optional: the concrete entity type that is referenced by this field.
+   * Optional: name of the concrete entity type that is referenced by this field.
    */
-  entity?: { new (): Entity; };
+  entity?: string;
 
   /**
    * Optional: array of flags that can be included to describe the field.

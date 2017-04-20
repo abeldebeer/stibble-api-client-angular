@@ -1,7 +1,4 @@
-import { ProjectInfoBlock } from './project-info-block';
-import { User } from './user';
-import { ProjectLocation } from './project-location';
-import { App } from './app';
+import { Entity } from '../entity/entity';
 import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
@@ -21,21 +18,21 @@ export class Project implements OwnedEntity {
   @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ entity: User, flags: [Flag.GENERATED] })
-  owner: string;
+  @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
+  owner: string | Entity;
 
   @EntityField({
     serialize: idToIri,
-    entity: App,
+    entity: 'App',
     flags: [Flag.REQUIRED, Flag.NO_UPDATE]
   })
-  parent: string;
+  parent: string | Entity;
 
-  @EntityField({ entity: ProjectLocation, flags: [Flag.GENERATED] })
-  locations: Array<string>;
+  @EntityField({ entity: 'ProjectLocation', flags: [Flag.GENERATED] })
+  locations: Array<string | Entity>;
 
-  @EntityField({ entity: ProjectInfoBlock, flags: [Flag.GENERATED] })
-  info: Array<string>;
+  @EntityField({ entity: 'ProjectInfoBlock', flags: [Flag.GENERATED] })
+  infoBlocks: Array<string | Entity>;
 
   @EntityField({ flags: [Flag.REQUIRED] })
   title: string;

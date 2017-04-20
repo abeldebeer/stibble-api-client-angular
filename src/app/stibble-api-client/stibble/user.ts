@@ -15,9 +15,6 @@ export class User implements Entity {
   @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
 
-  @EntityField({ flags: [Flag.GENERATED] })
-  owner: string;
-
   @EntityField({ flags: [Flag.NO_UPDATE] })
   email: string;
 

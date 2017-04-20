@@ -16,17 +16,12 @@ export interface Gateway {
   /**
    * Find one entity by its unique resource ID.
    */
-  find(id: string): Observable<Response>;
+  find(id: string, params?: { [key: string]: any }): Observable<Response>;
 
   /**
    * Find all entities.
    */
-  findAll(): Observable<Response>;
-
-  /**
-   * Find all entities that match the provided parameters.
-   */
-  findByParams(params: { [key: string]: any }): Observable<Response>;
+  findAll(params?: { [key: string]: any }): Observable<Response>;
 
   /**
    * Update an entity with the provided id and data.
