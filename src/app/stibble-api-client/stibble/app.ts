@@ -21,10 +21,10 @@ export class App implements OwnedEntity {
   owner: string | Entity;
 
   @EntityField({ entity: 'Project', flags: [Flag.GENERATED] })
-  projects: Array<string | Entity>;
+  projects: Array<string | Entity> = [];
 
   @EntityField({ entity: 'AppInfoBlock', flags: [Flag.GENERATED] })
-  infoBlocks: Array<string | Entity>;
+  infoBlocks: Array<string | Entity> = [];
 
   @EntityField({ flags: [Flag.REQUIRED] })
   title: string;

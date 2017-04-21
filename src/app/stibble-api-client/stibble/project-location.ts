@@ -1,8 +1,8 @@
 import { Entity } from '../entity/entity';
-import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
-import { normalizeId, idToIri } from '../util/functions';
+import { OwnedEntity } from '../entity/owned-entity';
+import { idToIri, normalizeId } from '../util/functions';
 
 @EntityClass({ endpoint: 'project-locations' })
 export class ProjectLocation implements OwnedEntity {
@@ -27,7 +27,7 @@ export class ProjectLocation implements OwnedEntity {
   parent: string | Entity;
 
   @EntityField({ entity: 'ProjectLocationPage', flags: [Flag.GENERATED] })
-  pages: Array<string | Entity>;
+  pages: Array<string | Entity> = [];
 
   @EntityField({ serialize: idToIri, entity: 'Beacon' })
   beacon: string | Entity;

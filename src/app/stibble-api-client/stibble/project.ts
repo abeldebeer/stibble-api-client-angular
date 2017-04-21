@@ -33,10 +33,10 @@ export class Project implements OwnedEntity {
   parent: string | Entity;
 
   @EntityField({ entity: 'ProjectLocation', flags: [Flag.GENERATED] })
-  locations: Array<string | Entity>;
+  locations: Array<string | Entity> = [];
 
   @EntityField({ entity: 'ProjectInfoBlock', flags: [Flag.GENERATED] })
-  infoBlocks: Array<string | Entity>;
+  infoBlocks: Array<string | Entity> = [];
 
   @EntityField({ flags: [Flag.REQUIRED] })
   title: string;
