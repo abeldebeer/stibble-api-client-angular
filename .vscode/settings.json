@@ -11,5 +11,14 @@
       "when": "$(basename).ts"
     }
   },
-  "tslint.autoFixOnSave": true
+  "tslint.autoFixOnSave": true,
+  "typescript.extension.sortImports.sortMethod": "path",
+  "typescript.extension.sortImports.sortOnSave": true,
+  "typescript.extension.sortImports.quoteStyle": "single",
+  "typescript.extension.sortImports.maxNamedImportsInSingleLine": 3,
+  "typescript.extension.sortImports.pathSortOrder": [
+    "package",
+    "relativeUpLevel",
+    "relativeDownLevel"
+  ]
 }

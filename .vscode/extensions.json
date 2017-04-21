@@ -7,6 +7,7 @@
     "johnpapa.angular2",
     "EditorConfig.editorconfig",
     "eg2.tslint",
-    "formulahendry.auto-close-tag"
+    "formulahendry.auto-close-tag",
+    "miclo.sort-typescript-imports"
   ]
 }
