@@ -1,13 +1,9 @@
 import { Entity } from '../entity/entity';
-import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
-import { EntityFieldMetadata, EntityFieldFlags as Flag } from '../entity/entity-metadata';
+import { EntityFieldFlags as Flag, EntityFieldMetadata } from '../entity/entity-metadata';
+import { OwnedEntity } from '../entity/owned-entity';
 import { normalizeId } from '../util/functions';
-
-/**
- * App publication status.
- */
-export type Status = 'UNPUBLISHED' | 'PUBLISHED';
+import { PublicationStatus } from './publication-status';
 
 @EntityClass({ endpoint: 'apps' })
 export class App implements OwnedEntity {
@@ -37,6 +33,6 @@ export class App implements OwnedEntity {
   subTitle: string;
 
   @EntityField()
-  status: Status;
+  publicationStatus: PublicationStatus;
 
 }

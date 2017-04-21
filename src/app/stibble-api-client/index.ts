@@ -25,6 +25,7 @@ export * from './stibble/project-location-page-block';
 export * from './stibble/project-location-page';
 export * from './stibble/project-location';
 export * from './stibble/project';
+export * from './stibble/publication-status';
 export * from './stibble/user';
 
 export * from './token/abstract-token-storage';

@@ -1,8 +1,9 @@
 import { Entity } from '../entity/entity';
-import { OwnedEntity } from '../entity/owned-entity';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
-import { normalizeId, idToIri } from '../util/functions';
+import { OwnedEntity } from '../entity/owned-entity';
+import { idToIri, normalizeId } from '../util/functions';
+import { PublicationStatus } from './publication-status';
 
 /**
  * Project map type.
@@ -51,5 +52,8 @@ export class Project implements OwnedEntity {
 
   @EntityField()
   introductionText: string;
+
+  @EntityField()
+  publicationStatus: PublicationStatus;
 
 }
