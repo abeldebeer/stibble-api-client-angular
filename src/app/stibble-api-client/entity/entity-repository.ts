@@ -1,21 +1,21 @@
-import { FindAllParameters, FindParameters } from './entity-parameters';
 import { Response } from '@angular/http';
-import { EntityFieldFlags as Flag, EntityFieldMetadata } from './entity-metadata';
-import { Observable } from 'rxjs/Observable';
-import { Gateway } from './gateway';
-import { EntityMetadataProvider } from './entity-metadata-provider';
-import { Repository } from './repository';
-import { Entity } from './entity';
-import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
-
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 import {
-  KEY_PARENT,
+  KEY_ENTITY,
+  KEY_EXPAND,
   KEY_HYDRA_ITEMS,
   KEY_HYDRA_TOTAL_ITEMS,
-  KEY_ENTITY,
-  KEY_EXPAND
-} from './../client/client-constants';
+  KEY_ORDER,
+  KEY_PARENT
+  } from './../client/client-constants';
+import { Entity } from './entity';
+import { EntityFieldFlags as Flag, EntityFieldMetadata } from './entity-metadata';
+import { EntityMetadataProvider } from './entity-metadata-provider';
+import { FindAllParameters, FindParameters } from './entity-parameters';
+import { Gateway } from './gateway';
+import { Repository } from './repository';
 
 export class EntityRepository<T extends Entity> implements Repository<T> {
 
@@ -232,6 +232,18 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
     if (params.expand) {
       // expand parameter is CSV list of entity names
       prepared[KEY_EXPAND] = params.expand.map(entity => entity && entity.name).join(',');
+    }
+
+    // grab 'order' filter from parameters
+    const order: { [key: string]: string } = (<FindAllParameters>params).order;
+
+    if (order) {
+      for (const key in order) {
+        if (order.hasOwnProperty(key)) {
+          // add order param
+          prepared[`${KEY_ORDER}[${key}]`] = order[key];
+        }
+      }
     }
 
     return prepared;
