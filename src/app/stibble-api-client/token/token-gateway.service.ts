@@ -1,15 +1,25 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptionsArgs, Response } from '@angular/http';
+import {
+  Headers,
+  Http,
+  RequestOptionsArgs,
+  Response
+  } from '@angular/http';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Observable';
-
 import { ClientConfig } from '../client/client-config.service';
 import { PATH_TOKEN } from '../client/client-constants';
+import { ClientError } from './../client/client-error';
 import { Token } from './token';
 
 @Injectable()
 export class TokenGateway {
 
-  constructor(private _clientConfig: ClientConfig, private _http: Http) { }
+  constructor(
+    private _clientConfig: ClientConfig,
+    private _http: Http
+  ) { }
 
   /**
    * Authenticate with the API.
@@ -28,7 +38,8 @@ export class TokenGateway {
     };
 
     // create token
-    return this._http.post(url, null, options);
+    return this._http.post(url, null, options)
+      .catch(response => Observable.throw(ClientError.from(response, url)));
   }
 
 }

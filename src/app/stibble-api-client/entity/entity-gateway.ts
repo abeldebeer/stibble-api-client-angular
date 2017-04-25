@@ -1,8 +1,16 @@
-import { PATH_API } from './../client/client-constants';
+import {
+  Headers,
+  Http,
+  RequestOptionsArgs,
+  Response
+  } from '@angular/http';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Observable';
-import { Headers, Response, Http, RequestOptionsArgs } from '@angular/http';
-import { TokenStorageProvider } from '../token/token-storage-provider.service';
 import { ClientConfig } from '../client/client-config.service';
+import { TokenStorageProvider } from '../token/token-storage-provider.service';
+import { PATH_API } from './../client/client-constants';
+import { ClientError } from './../client/client-error';
 import { EntityClassMetadata } from './entity-metadata';
 import { Gateway } from './gateway';
 import { createIri } from './gateway-helper';
@@ -31,23 +39,38 @@ export class EntityGateway implements Gateway {
   // -----------------------------------------------------------------------------------------------
 
   create(data: { [key: string]: any }): Observable<Response> {
-    return this._http.post(this._createUrl(), data, this._createRequestOptions());
+    const url: string = this._createUrl();
+
+    return this._http.post(url, data, this._createRequestOptions())
+      .catch(response => Observable.throw(ClientError.from(response, url)));
   }
 
   delete(id: string): Observable<Response> {
-    return this._http.delete(this._createUrl(id), this._createRequestOptions());
+    const url: string = this._createUrl(id);
+
+    return this._http.delete(url, this._createRequestOptions())
+      .catch(response => Observable.throw(ClientError.from(response, url)));
   }
 
   find(id: string, params?: { [key: string]: any }): Observable<Response> {
-    return this._http.get(this._createUrl(id), this._createRequestOptions(params));
+    const url: string = this._createUrl(id);
+
+    return this._http.get(url, this._createRequestOptions(params))
+      .catch(response => Observable.throw(ClientError.from(response, url)));
   }
 
   findAll(params?: { [key: string]: any }): Observable<Response> {
-    return this._http.get(this._createUrl(), this._createRequestOptions(params));
+    const url: string = this._createUrl();
+
+    return this._http.get(url, this._createRequestOptions(params))
+      .catch(response => Observable.throw(ClientError.from(response, url)));
   }
 
   update(id: string, data: { [key: string]: any }): Observable<Response> {
-    return this._http.put(this._createUrl(id), data, this._createRequestOptions());
+    const url: string = this._createUrl(id);
+
+    return this._http.put(url, data, this._createRequestOptions())
+      .catch(response => Observable.throw(ClientError.from(response, url)));
   }
 
   // -----------------------------------------------------------------------------------------------

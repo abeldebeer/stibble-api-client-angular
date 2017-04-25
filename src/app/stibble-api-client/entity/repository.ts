@@ -1,6 +1,6 @@
-import { FindAllParameters, FindParameters } from './entity-parameters';
 import { Observable } from 'rxjs/Observable';
 import { Entity } from './entity';
+import { FindAllParameters, FindParameters } from './entity-parameters';
 
 export interface Repository<T extends Entity> {
 
@@ -13,6 +13,11 @@ export interface Repository<T extends Entity> {
    * Delete the provided entity. Returned value is the ID of the entity that was deleted.
    */
   delete(entity: T): Observable<string>;
+
+  /**
+   * Delete the entity with the provided ID. Returned value is the same ID.
+   */
+  deleteById(id: string): Observable<string>;
 
   /**
    * Find one entity by its unique resource ID.

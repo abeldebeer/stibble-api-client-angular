@@ -40,10 +40,12 @@ export class EntityRepository<T extends Entity> implements Repository<T> {
   }
 
   delete(entity: T): Observable<string> {
-    const id = entity.id;
+    return this.deleteById(entity.id);
+  }
 
+  deleteById(id: string): Observable<string> {
     if (!id) {
-      return Observable.throw(`Cannot delete '${this._name()}': Property 'id' is invalid`);
+      return Observable.throw(`Cannot delete '${this._name()}': 'id' is invalid`);
     }
 
     return this._gateway.delete(id)
