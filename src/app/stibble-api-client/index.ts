@@ -2,6 +2,7 @@ export * from './stibble-api-client.module';
 
 export * from './client/client-config.service';
 export * from './client/client-constants';
+export * from './client/client-error';
 
 export * from './entity/content-block';
 export * from './entity/entity-decorators';
