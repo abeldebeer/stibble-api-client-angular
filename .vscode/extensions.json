@@ -2,12 +2,15 @@
   // See http://go.microsoft.com/fwlink/?LinkId=827846
   // for the documentation about the extensions.json format
   "recommendations": [
-    "steoates.autoimport",
     "streetsidesoftware.code-spell-checker",
-    "johnpapa.angular2",
     "EditorConfig.editorconfig",
     "eg2.tslint",
-    "formulahendry.auto-close-tag",
-    "miclo.sort-typescript-imports"
+    "mrmlnc.vscode-scss",
+    "vmsynkov.colonize",
+    "P-de-Jong.vscode-html-scss",
+    "lonefy.vscode-js-css-html-formatter",
+    "formulahendry.auto-complete-tag",
+    "miclo.sort-typescript-imports",
+    "k--kato.intellij-idea-keybindings"
   ]
 }
