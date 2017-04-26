@@ -112,7 +112,7 @@ export class EntityGateway implements Gateway {
   private _handleError(response: Response, requestUrl: string): Observable<ClientError> {
     // response says 'unauthorized': remove expired token
     if (response.status === 401) {
-      this._tokenStorageProvider.tokenStorage.removeToken();
+      this._tokenStorageProvider.removeToken();
     }
 
     return Observable.throw(ClientError.from(response, requestUrl));

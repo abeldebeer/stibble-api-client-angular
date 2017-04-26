@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-
+import { Observable } from 'rxjs/Observable';
 import { Token } from './token';
 import { TokenGateway } from './token-gateway.service';
 import { TokenStorage } from './token-storage';
@@ -15,6 +14,10 @@ export class TokenService {
     private _tokenGateway: TokenGateway,
     private _tokenStorageProvider: TokenStorageProvider
   ) { }
+
+  // -----------------------------------------------------------------------------------------------
+  // PUBLIC METHODS
+  // -----------------------------------------------------------------------------------------------
 
   /**
    * Create and store an authentication token.
@@ -30,19 +33,25 @@ export class TokenService {
       .do(token => this.tokenStorage.storeToken(token));
   }
 
-  /**
-   * Return whether a stored token is available and hasn't expired yet.
-   */
+  // -----------------------------------------------------------------------------------------------
+  // TOKEN STORAGE DELEGATION
+  // -----------------------------------------------------------------------------------------------
+
   hasValidToken(): boolean {
     return this.tokenStorage.hasValidToken();
-  };
-
-  /**
-   * Remove a stored token.
-   */
-  removeToken(): void {
-    this.tokenStorage.removeToken();
   }
+
+  observeTokenAvailable(): Observable<boolean> {
+    return this.tokenStorage.observeTokenAvailable();
+  }
+
+  removeToken(): void {
+    return this.tokenStorage.removeToken();
+  }
+
+  // -----------------------------------------------------------------------------------------------
+  // PRIVATE METHODS
+  // -----------------------------------------------------------------------------------------------
 
   private get tokenStorage(): TokenStorage {
     return this._tokenStorageProvider.tokenStorage;
