@@ -4,7 +4,7 @@ import {
   KEY_HYDRA_DESCRIPTION,
   KEY_HYDRA_TITLE,
   KEY_VIOLATIONS
-  } from 'app/stibble-api-client';
+  } from './client-constants';
 
 const DEFAULT_MESSAGE = 'Unrecoverable error';
 const DEFAULT_DESCRIPTION = `Stibble API client operation resulted in unrecoverable error - ` +
