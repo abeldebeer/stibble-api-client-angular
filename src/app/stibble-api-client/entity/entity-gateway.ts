@@ -42,35 +42,35 @@ export class EntityGateway implements Gateway {
     const url: string = this._createUrl();
 
     return this._http.post(url, data, this._createRequestOptions())
-      .catch(response => Observable.throw(ClientError.from(response, url)));
+      .catch(response => this._handleError(response, url));
   }
 
   delete(id: string): Observable<Response> {
     const url: string = this._createUrl(id);
 
     return this._http.delete(url, this._createRequestOptions())
-      .catch(response => Observable.throw(ClientError.from(response, url)));
+      .catch(response => this._handleError(response, url));
   }
 
   find(id: string, params?: { [key: string]: any }): Observable<Response> {
     const url: string = this._createUrl(id);
 
     return this._http.get(url, this._createRequestOptions(params))
-      .catch(response => Observable.throw(ClientError.from(response, url)));
+      .catch(response => this._handleError(response, url));
   }
 
   findAll(params?: { [key: string]: any }): Observable<Response> {
     const url: string = this._createUrl();
 
     return this._http.get(url, this._createRequestOptions(params))
-      .catch(response => Observable.throw(ClientError.from(response, url)));
+      .catch(response => this._handleError(response, url));
   }
 
   update(id: string, data: { [key: string]: any }): Observable<Response> {
     const url: string = this._createUrl(id);
 
     return this._http.put(url, data, this._createRequestOptions())
-      .catch(response => Observable.throw(ClientError.from(response, url)));
+      .catch(response => this._handleError(response, url));
   }
 
   // -----------------------------------------------------------------------------------------------
@@ -100,6 +100,22 @@ export class EntityGateway implements Gateway {
    */
   private _createUrl(id?: string): string {
     return this._clientConfig.baseUrl + createIri(this._metadata, id);
+  }
+
+  /**
+   * Handle HTTP error response.
+   *
+   * @param response Response from the Angular HTTP client.
+   * @param requestUrl URL that was requested.
+   * @returns Observable of client error object.
+   */
+  private _handleError(response: Response, requestUrl: string): Observable<ClientError> {
+    // response says 'unauthorized': remove expired token
+    if (response.status === 401) {
+      this._tokenStorageProvider.tokenStorage.removeToken();
+    }
+
+    return Observable.throw(ClientError.from(response, requestUrl));
   }
 
 }
