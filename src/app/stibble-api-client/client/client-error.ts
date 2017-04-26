@@ -1,4 +1,10 @@
 import { RequestOptionsArgs, Response, ResponseType } from '@angular/http';
+import {
+  KEY_HYDRA_CONTEXT,
+  KEY_HYDRA_DESCRIPTION,
+  KEY_HYDRA_TITLE,
+  KEY_VIOLATIONS
+  } from 'app/stibble-api-client';
 
 const DEFAULT_MESSAGE = 'Unrecoverable error';
 const DEFAULT_DESCRIPTION = `Stibble API client operation resulted in unrecoverable error - ` +
@@ -11,6 +17,23 @@ const ResponseTypeMessage = {
   [ResponseType.Error]: 'Error',
   [ResponseType.Opaque]: 'Opaque',
 };
+
+/**
+ * Represents a violation (validation error), as reported by the API.
+ */
+export interface Violation {
+
+  /**
+   * Description of the violation.
+   */
+  message: string;
+
+  /**
+   * Path (name) of the property that contains the violation.
+   */
+  propertyPath: string;
+
+}
 
 export class ClientError extends Error {
 
@@ -30,6 +53,7 @@ export class ClientError extends Error {
     let description: string = DEFAULT_DESCRIPTION;
     const url: string = response.url || requestUrl;
     const responseType: string = ResponseTypeMessage[response.type];
+    const violations: Array<Violation> = [];
 
     if (response.statusText) {
       message = response.statusText;
@@ -37,12 +61,25 @@ export class ClientError extends Error {
 
     const json = response.json();
 
-    if (!(json instanceof ProgressEvent) && typeof json.error === 'object') {
-      message = json.error.message;
-      description = json.error.description;
+    if (typeof json === 'object' && !(json instanceof ProgressEvent)) {
+      if (typeof json[KEY_HYDRA_CONTEXT] !== 'undefined') {
+        // hydra error object
+        message = json[KEY_HYDRA_TITLE];
+        description = json[KEY_HYDRA_DESCRIPTION];
+
+        if (typeof json[KEY_VIOLATIONS] !== 'undefined') {
+          json[KEY_VIOLATIONS].forEach((violation: Violation) => {
+            violations.push(violation);
+          });
+        }
+      } else if (typeof json['error'] === 'object') {
+        // simple error object
+        message = json.error.message;
+        description = json.error.description;
+      }
     }
 
-    return new ClientError(message, code, description, url, responseType);
+    return new ClientError(message, code, description, url, responseType, violations);
   }
 
   // -----------------------------------------------------------------------------------------------
@@ -55,6 +92,7 @@ export class ClientError extends Error {
    * @param description Description of the error that occurred.
    * @param url Requested URL that lead to this error.
    * @param responseType Indication of the type of response (error).
+   * @param violations Array of violations.
    */
   constructor(
     public readonly message: string,
@@ -62,11 +100,19 @@ export class ClientError extends Error {
     public readonly description?: string,
     public readonly url?: string,
     public readonly responseType?: string,
+    public readonly violations?: Array<Violation>,
   ) {
     super(message);
 
     // set the prototype explicitly
     Object.setPrototypeOf(this, ClientError.prototype);
+  }
+
+  /**
+   * @returns Whether an array of violations is available.
+   */
+  hasViolations() {
+    return this.violations && this.violations.length > 0;
   }
 
 }
