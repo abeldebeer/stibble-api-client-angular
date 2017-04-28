@@ -6,6 +6,10 @@ import { normalizeId } from '../util/functions';
 @EntityClass({ endpoint: 'users' })
 export class User implements Entity {
 
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES INHERITED FROM INTERFACES
+  // -----------------------------------------------------------------------------------------------
+
   @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
@@ -14,6 +18,10 @@ export class User implements Entity {
 
   @EntityField({ deserialize: Date.parse, flags: [Flag.GENERATED] })
   updatedAt: Date;
+
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES
+  // -----------------------------------------------------------------------------------------------
 
   @EntityField({ flags: [Flag.NO_UPDATE] })
   email: string;

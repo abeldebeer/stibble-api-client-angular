@@ -7,6 +7,10 @@ import { idToIri, normalizeId } from '../util/functions';
 @EntityClass({ endpoint: 'project-location-pages' })
 export class ProjectLocationPage implements OwnedEntity {
 
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES INHERITED FROM INTERFACES
+  // -----------------------------------------------------------------------------------------------
+
   @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
@@ -19,6 +23,16 @@ export class ProjectLocationPage implements OwnedEntity {
   @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
   owner: string | Entity;
 
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES
+  // -----------------------------------------------------------------------------------------------
+
+  @EntityField({ flags: [Flag.REQUIRED] })
+  name: string;
+
+  @EntityField({ flags: [Flag.REQUIRED] })
+  template: string;
+
   @EntityField({
     serialize: idToIri,
     entity: 'ProjectLocation',
@@ -28,11 +42,5 @@ export class ProjectLocationPage implements OwnedEntity {
 
   @EntityField({ entity: 'ProjectLocationPageBlock', flags: [Flag.GENERATED] })
   contentBlocks: Array<string | Entity> = [];
-
-  @EntityField({ flags: [Flag.REQUIRED] })
-  name: string;
-
-  @EntityField({ flags: [Flag.REQUIRED] })
-  template: string;
 
 }

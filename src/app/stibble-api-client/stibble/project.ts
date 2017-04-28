@@ -13,6 +13,10 @@ export type MapType = 'GOOGLE_OUTDOOR' | 'IMAGE';
 @EntityClass({ endpoint: 'projects' })
 export class Project implements OwnedEntity {
 
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES INHERITED FROM INTERFACES
+  // -----------------------------------------------------------------------------------------------
+
   @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
@@ -24,6 +28,28 @@ export class Project implements OwnedEntity {
 
   @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
   owner: string | Entity;
+
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES
+  // -----------------------------------------------------------------------------------------------
+
+  @EntityField({ flags: [Flag.REQUIRED] })
+  title: string;
+
+  @EntityField()
+  subTitle: string;
+
+  @EntityField()
+  imageSrc: string;
+
+  @EntityField()
+  introductionText: string;
+
+  @EntityField({ flags: [Flag.REQUIRED] })
+  mapType: MapType;
+
+  @EntityField()
+  publicationStatus: PublicationStatus;
 
   @EntityField({
     serialize: idToIri,
@@ -37,23 +63,5 @@ export class Project implements OwnedEntity {
 
   @EntityField({ entity: 'ProjectInfoBlock', flags: [Flag.GENERATED] })
   infoBlocks: Array<string | Entity> = [];
-
-  @EntityField({ flags: [Flag.REQUIRED] })
-  title: string;
-
-  @EntityField({ flags: [Flag.REQUIRED] })
-  mapType: MapType;
-
-  @EntityField()
-  subTitle: string;
-
-  @EntityField()
-  imageSrc: string;
-
-  @EntityField()
-  introductionText: string;
-
-  @EntityField()
-  publicationStatus: PublicationStatus;
 
 }

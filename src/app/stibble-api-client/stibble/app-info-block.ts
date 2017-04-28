@@ -1,10 +1,14 @@
-import { ContentBlock } from './../entity/content-block';
 import { EntityClass, EntityField } from '../entity/entity-decorators';
 import { EntityFieldFlags as Flag } from '../entity/entity-metadata';
-import { normalizeId, idToIri } from '../util/functions';
+import { idToIri, normalizeId } from '../util/functions';
+import { ContentBlock } from './../entity/content-block';
 
 @EntityClass({ endpoint: 'app-info-blocks' })
 export class AppInfoBlock implements ContentBlock {
+
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES INHERITED FROM INTERFACES
+  // -----------------------------------------------------------------------------------------------
 
   @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
@@ -18,13 +22,6 @@ export class AppInfoBlock implements ContentBlock {
   @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
   owner: string;
 
-  @EntityField({
-    serialize: idToIri,
-    entity: 'App',
-    flags: [Flag.REQUIRED, Flag.NO_UPDATE]
-  })
-  parent: string;
-
   @EntityField({ flags: [Flag.REQUIRED] })
   blockIndex: number;
 
@@ -33,5 +30,16 @@ export class AppInfoBlock implements ContentBlock {
 
   @EntityField()
   value: any;
+
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES
+  // -----------------------------------------------------------------------------------------------
+
+  @EntityField({
+    serialize: idToIri,
+    entity: 'App',
+    flags: [Flag.REQUIRED, Flag.NO_UPDATE]
+  })
+  parent: string;
 
 }

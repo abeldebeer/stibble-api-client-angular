@@ -7,6 +7,10 @@ import { normalizeId } from '../util/functions';
 @EntityClass({ endpoint: 'beacons' })
 export class Beacon implements OwnedEntity {
 
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES INHERITED FROM INTERFACES
+  // -----------------------------------------------------------------------------------------------
+
   @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
@@ -18,6 +22,10 @@ export class Beacon implements OwnedEntity {
 
   @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
   owner: string | Entity;
+
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES
+  // -----------------------------------------------------------------------------------------------
 
   @EntityField({ flags: [Flag.REQUIRED] })
   name: string;

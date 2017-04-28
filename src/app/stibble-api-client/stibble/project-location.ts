@@ -7,6 +7,10 @@ import { idToIri, normalizeId } from '../util/functions';
 @EntityClass({ endpoint: 'project-locations' })
 export class ProjectLocation implements OwnedEntity {
 
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES INHERITED FROM INTERFACES
+  // -----------------------------------------------------------------------------------------------
+
   @EntityField({ deserialize: normalizeId, flags: [Flag.GENERATED] })
   id: string;
 
@@ -19,18 +23,9 @@ export class ProjectLocation implements OwnedEntity {
   @EntityField({ entity: 'User', flags: [Flag.GENERATED] })
   owner: string | Entity;
 
-  @EntityField({
-    serialize: idToIri,
-    entity: 'Project',
-    flags: [Flag.REQUIRED, Flag.NO_UPDATE]
-  })
-  parent: string | Entity;
-
-  @EntityField({ entity: 'ProjectLocationPage', flags: [Flag.GENERATED] })
-  pages: Array<string | Entity> = [];
-
-  @EntityField({ serialize: idToIri, entity: 'Beacon' })
-  beacon: string | Entity;
+  // -----------------------------------------------------------------------------------------------
+  // PROPERTIES
+  // -----------------------------------------------------------------------------------------------
 
   @EntityField({ flags: [Flag.REQUIRED] })
   title: string;
@@ -46,5 +41,18 @@ export class ProjectLocation implements OwnedEntity {
 
   @EntityField()
   longitude: string;
+
+  @EntityField({ serialize: idToIri, entity: 'Beacon' })
+  beacon: string | Entity;
+
+  @EntityField({
+    serialize: idToIri,
+    entity: 'Project',
+    flags: [Flag.REQUIRED, Flag.NO_UPDATE]
+  })
+  parent: string | Entity;
+
+  @EntityField({ entity: 'ProjectLocationPage', flags: [Flag.GENERATED] })
+  pages: Array<string | Entity> = [];
 
 }
